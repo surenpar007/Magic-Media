@@ -1,0 +1,853 @@
+<title>Magic Media</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#0A1433; --ink:#FFFFFF; --muted:#A9B3C7; --line:rgba(190,210,235,.28);
+  --amber:#FFB85C; --cyan:#61E8FF;
+  --font:'Sora',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);min-height:100svh;display:flex;flex-direction:column;position:relative;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:8px}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* background field */
+.signal-field{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 90% 80% at 50% 45%,#1B3270 0%,#112250 45%,#0A1433 100%);overflow:hidden}
+.field-glow{position:absolute;border-radius:50%;filter:blur(60px);pointer-events:none}
+.field-glow--amber{left:50%;top:-20%;width:70vw;height:60vh;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(255,184,92,.45),rgba(255,184,92,0));animation:breathe 9s ease-in-out infinite alternate}
+.field-glow--cyan{left:50%;bottom:-24%;width:70vw;height:60vh;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(97,232,255,.4),rgba(97,232,255,0));animation:breathe 9s ease-in-out -4s infinite alternate}
+.field-grain{position:absolute;inset:0;opacity:.07;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>")}
+.field-lines{position:absolute;inset:0;width:100%;height:100%}
+.beams--soft{}
+.beams--sharp{}
+.sparkles circle{animation:twinkle 4s ease-in-out infinite}
+.sparkles circle:nth-child(2n){animation-delay:-1.3s}
+.sparkles circle:nth-child(3n){animation-delay:-2.6s}
+.field-core{transform-origin:800px 500px;animation:core 6s ease-in-out infinite alternate}
+@keyframes breathe{from{opacity:.72}to{opacity:1}}
+@keyframes twinkle{0%,100%{opacity:.25}50%{opacity:1}}
+@keyframes core{from{transform:scale(.88);opacity:.8}to{transform:scale(1.18);opacity:1}}
+.veil{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 52% 40% at 50% 42%,rgba(8,16,44,.45),rgba(8,16,44,0) 100%),linear-gradient(180deg,rgba(8,16,44,.4),rgba(8,16,44,0) 20%,rgba(8,16,44,0) 76%,rgba(8,16,44,.5))}
+
+/* header */
+.site-header{position:relative;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:20px;
+  padding:calc(26px + env(safe-area-inset-top,0px)) max(24px,env(safe-area-inset-right,0px)) 0 max(24px,env(safe-area-inset-left,0px))}
+.brand{display:flex;align-items:center;gap:16px}
+.brand-logo{height:30px;width:auto;display:block;filter:drop-shadow(0 4px 14px rgba(97,232,255,.35))}
+.brand-mark{display:flex;align-items:center;gap:3px;height:26px}
+.brand-mark i{display:block;width:3px;border-radius:3px;transform:skewX(-22deg)}
+.brand-mark i:nth-child(1){height:14px;background:var(--amber)}
+.brand-mark i:nth-child(2){height:22px;background:#FFE3B8}
+.brand-mark i:nth-child(3){height:26px;background:var(--amber)}
+.brand-mark i:nth-child(4){height:16px;background:#fff}
+.brand-name{font-weight:600;font-size:.9rem;letter-spacing:.3em}
+.nav-shell{display:flex;align-items:center;gap:44px}
+.nav-links{display:flex;align-items:center;gap:36px;font-size:.92rem;font-weight:500;color:#FBFDFF}
+.nav-links a:hover,.nav-secondary:hover{color:var(--cyan)}
+.chevron,.nav-secondary span{color:var(--cyan);font-size:.8em}
+.nav-actions{display:flex;align-items:center;gap:26px}
+.nav-secondary{font-size:.92rem;font-weight:500;color:#E8ECF0}
+.nav-toggle,.menu-button,.nav-scrim{display:none}
+
+/* glass buttons */
+.button{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:14px;min-height:48px;padding:12px 30px;border-radius:999px;font-weight:500;font-size:.95rem;color:#fff;
+  background:linear-gradient(120deg,rgba(255,184,92,.26),rgba(97,232,255,.2));
+  box-shadow:0 0 34px rgba(97,232,255,.12),inset 0 1px 0 rgba(255,255,255,.16);transition:transform .25s ease,box-shadow .25s ease,background .25s ease}
+.button::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(120deg,rgba(255,200,130,.75),rgba(255,255,255,.18) 50%,rgba(120,235,255,.75));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.button:hover{transform:translateY(-2px);box-shadow:0 0 44px rgba(97,232,255,.28),inset 0 1px 0 rgba(255,255,255,.22)}
+.button:active{transform:translateY(0)}
+.button--small{min-height:46px;padding:10px 26px;font-size:.88rem}
+.button--hero{min-height:58px;padding:14px 44px;font-size:1.05rem}
+
+/* hero */
+.hero{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:34px;
+  padding:24px max(24px,env(safe-area-inset-right,0px)) 0 max(24px,env(safe-area-inset-left,0px))}
+.hero-copy{display:flex;flex-direction:column;align-items:center;gap:26px}
+.eyebrow{margin:0;font-size:.74rem;font-weight:600;letter-spacing:.24em;color:#D0DAEC}
+.eyebrow span{color:var(--amber);margin:0 .5em}
+.hero h1{margin:0;font-weight:500;font-size:clamp(2.6rem,6.6vw,5.6rem);line-height:1.06;letter-spacing:-.03em;text-wrap:balance;text-shadow:0 4px 50px rgba(5,9,20,.8)}
+.hero h1 span{display:block}
+.subhead{margin:0;font-weight:400;font-size:clamp(1.02rem,1.7vw,1.28rem);line-height:1.55;color:#C3CCDD}
+.subhead span{display:block}
+.service-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;width:min(1100px,100%);margin-top:auto;padding-top:20px}
+.service-row a{display:flex;align-items:center;gap:12px;padding:0 4px 12px;border-bottom:1px solid var(--line);font-size:.9rem;font-weight:400;color:#E2EBF5;transition:border-color .25s,color .25s}
+.service-row a:hover{border-color:var(--cyan);color:#fff}
+.service-index{font-size:.68rem;color:var(--amber)}
+.service-arrow{margin-left:auto;color:var(--cyan)}
+.hero-rule{width:1px;height:44px;background:linear-gradient(180deg,rgba(214,226,240,.8),rgba(214,226,240,0))}
+
+.site-footer{position:relative;z-index:2;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 32px;font-size:.78rem;color:#C9D3E4;
+  padding:14px max(24px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(24px,env(safe-area-inset-left,0px))}
+.site-footer p{margin:0}
+.site-footer span{margin:0 .4em}
+
+/* entrance, once, ends fully visible */
+@media (prefers-reduced-motion:no-preference){
+  .brand,.nav-links,.nav-actions,.menu-button{animation:in .8s cubic-bezier(.2,.8,.2,1) both}
+  .nav-links{animation-delay:.1s}.nav-actions{animation-delay:.2s}
+  .eyebrow{animation:in .8s cubic-bezier(.2,.8,.2,1) .25s both}
+  .hero h1 span{animation:in .9s cubic-bezier(.2,.8,.2,1) both}
+  .hero h1 span:nth-child(1){animation-delay:.35s}.hero h1 span:nth-child(2){animation-delay:.47s}
+  .subhead span{animation:in .8s cubic-bezier(.2,.8,.2,1) both}
+  .subhead span:nth-child(1){animation-delay:.7s}.subhead span:nth-child(2){animation-delay:.78s}
+  .button--hero{animation:in .8s cubic-bezier(.2,.8,.2,1) .95s both}
+  .service-row a{animation:in .7s cubic-bezier(.2,.8,.2,1) both}
+  .service-row a:nth-child(1){animation-delay:1.1s}.service-row a:nth-child(2){animation-delay:1.18s}.service-row a:nth-child(3){animation-delay:1.26s}.service-row a:nth-child(4){animation-delay:1.34s}
+  .hero-rule{transform-origin:top;animation:draw .7s cubic-bezier(.2,.8,.2,1) 1.4s both}
+  .site-footer p{animation:in .7s ease 1.5s both}
+}
+@keyframes in{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes draw{from{transform:scaleY(0)}to{transform:none}}
+
+/* tablet and phone */
+@media (max-width:1000px){
+  .nav-toggle{display:block;position:absolute;right:max(24px,env(safe-area-inset-right,0px));top:calc(26px + env(safe-area-inset-top,0px));width:46px;height:34px;opacity:0;margin:0;z-index:7;cursor:pointer}
+  .menu-button{display:flex;align-items:center;justify-content:center;width:46px;height:34px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.05);cursor:pointer;z-index:6}
+  .nav-toggle:focus-visible+.menu-button{outline:2px solid var(--cyan);outline-offset:3px}
+  .menu-icon{position:relative;width:19px;height:14px;display:block}
+  .menu-icon i{position:absolute;left:0;width:19px;height:1.6px;border-radius:2px;background:#fff;transition:transform .24s,opacity .18s}
+  .menu-icon i:nth-child(1){top:1px}.menu-icon i:nth-child(2){top:7px}.menu-icon i:nth-child(3){top:13px}
+  .nav-toggle:checked+.menu-button .menu-icon i:nth-child(1){transform:translateY(6px) rotate(45deg)}
+  .nav-toggle:checked+.menu-button .menu-icon i:nth-child(2){opacity:0}
+  .nav-toggle:checked+.menu-button .menu-icon i:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+  .nav-scrim{position:fixed;inset:0;z-index:3;background:rgba(5,9,20,.55);opacity:0;pointer-events:none;transition:opacity .25s}
+  .nav-toggle:checked~.nav-scrim{display:block;opacity:1;pointer-events:auto}
+  .nav-shell{position:absolute;top:calc(74px + env(safe-area-inset-top,0px));right:max(24px,env(safe-area-inset-right,0px));z-index:6;width:min(300px,82vw);flex-direction:column;align-items:stretch;gap:12px;padding:14px;border-radius:22px;
+    background:rgba(12,20,40,.88);border:1px solid var(--line);opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .22s,transform .22s,visibility 0s .22s}
+  .nav-toggle:checked~.nav-shell{opacity:1;visibility:visible;transform:none;transition:opacity .22s,transform .22s}
+  .nav-links,.nav-actions{flex-direction:column;align-items:stretch;gap:4px;animation:none}
+  .nav-links a,.nav-secondary{display:flex;align-items:center;justify-content:space-between;min-height:46px;padding:0 12px;border-radius:12px}
+  .nav-links a:hover,.nav-secondary:hover{background:rgba(255,255,255,.06)}
+  .nav-actions .button{width:100%}
+  .service-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 20px}
+}
+@media (max-width:640px){
+  .brand-name{font-size:.78rem}
+  .hero{gap:26px;padding-top:8px}
+  .eyebrow{font-size:.62rem;letter-spacing:.18em}
+  .button--hero{padding:14px 34px}
+  .hero-rule{height:26px}
+  .site-footer{flex-direction:column;align-items:center;text-align:center}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{animation:none!important;transition:none!important}
+}
+
+#gl3d{position:fixed;inset:0;width:100vw;height:100vh;z-index:1;pointer-events:none}
+.hero{flex:none;min-height:calc(100svh - 80px)}
+.sections{position:relative}
+.sec{position:relative;z-index:2;overflow:hidden;padding:200px max(24px,env(safe-area-inset-right,0px)) 200px max(24px,env(safe-area-inset-left,0px))}
+.sec .in{max-width:1200px;margin:0 auto}
+.col{width:min(540px,50%);display:flex;flex-direction:column;gap:32px}
+.col.r{margin-left:auto}
+.kicker{font-size:.74rem;font-weight:600;letter-spacing:.24em;color:var(--amber);text-transform:uppercase}
+.sec h2{margin:0;font-weight:500;font-size:clamp(2.2rem,4.6vw,3.8rem);line-height:1.08;letter-spacing:-.03em;text-wrap:balance}
+.sub{margin:0;color:#DCE4F2;font-size:1.05rem;line-height:1.7}
+.svc-list{display:flex;flex-direction:column;margin-top:10px;border-top:1px solid var(--line)}
+.svc{display:grid;grid-template-columns:34px 1fr;gap:4px 14px;padding:30px 8px;border-bottom:1px solid var(--line);transition:background .25s,border-color .25s}
+.svc:hover,.svc:focus-visible{background:linear-gradient(90deg,rgba(97,232,255,.09),rgba(97,232,255,0));border-color:rgba(97,232,255,.5)}
+.svc-n{font-size:.7rem;color:var(--amber);padding-top:7px;grid-row:1/3}
+.svc-t{font-size:1.25rem;font-weight:500}
+.svc-d{color:#D0DAEC;font-size:.95rem;line-height:1.6}
+.steps{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line)}
+.step{display:grid;grid-template-columns:44px 1fr;gap:14px;padding:34px 8px;border-bottom:1px solid var(--line);opacity:.55;transition:opacity .4s}
+.step.on{opacity:1}
+.step .n{font-size:.78rem;color:var(--cyan);padding-top:6px}
+.step h3{margin:0 0 6px;font-weight:500;font-size:1.35rem}
+.step p{margin:0;color:#D0DAEC;font-size:.97rem;line-height:1.65}
+.pr-list{display:flex;flex-direction:column;gap:26px;margin-top:8px}
+.pr{padding:20px 22px;border:1px solid var(--line);border-radius:18px;background:rgba(30,52,104,.5);}
+.pr h3{margin:0 0 6px;font-weight:500;font-size:1.15rem}
+.pr p{margin:0;color:#D0DAEC;font-size:.95rem;line-height:1.6}
+.num{font-weight:500;font-size:clamp(2.2rem,5vw,3.6rem);letter-spacing:.02em;line-height:1.1;user-select:all}
+.row2{display:flex;flex-wrap:wrap;gap:14px}
+.handle{margin:0;color:#D0DAEC}
+.handle a{color:var(--cyan)}
+.site-footer{margin-top:0}
+@media (max-width:1000px){
+  .col{width:100%}
+  .sec{padding-top:90px;padding-bottom:90px}
+  .sec .col{padding:22px;border-radius:24px;background:rgba(12,24,60,.72);}
+}
+@media (prefers-reduced-motion:reduce){.step{opacity:1}}
+
+.orb{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;width:46vw;height:46vw}
+.orb--a{left:-10vw;top:10vh;background:radial-gradient(closest-side,rgba(91,124,255,.45),rgba(91,124,255,0));animation:drift 26s ease-in-out infinite alternate}
+.orb--b{right:-12vw;top:34vh;background:radial-gradient(closest-side,rgba(255,170,90,.32),rgba(255,170,90,0));animation:drift 30s ease-in-out -8s infinite alternate-reverse}
+.orb--c{left:30vw;bottom:-18vh;background:radial-gradient(closest-side,rgba(97,232,255,.3),rgba(97,232,255,0));animation:drift 34s ease-in-out -14s infinite alternate}
+@keyframes drift{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(8vw,-6vh,0) scale(1.18)}}
+.fx{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+.fx .base{fill:none;stroke-opacity:.22;stroke-width:1.3}
+.fx .pulse{fill:none;stroke-linecap:round;stroke-dasharray:.13 .87;stroke-dashoffset:1;animation:travel 8s linear infinite}
+.fx .pulse.soft{stroke-width:10;opacity:.55}
+.fx .pulse.sharp{stroke-width:2.4}
+@keyframes travel{to{stroke-dashoffset:0}}
+.half{position:relative}
+.half .sec{z-index:2}
+.half .sec h2,.half .sec p,.half .sec li{text-shadow:0 1px 14px rgba(5,10,30,.75)}
+
+.fx .bs{fill:none;animation:breathe 7s ease-in-out infinite alternate}
+.fx .bsh{fill:none;animation:breathe 7s ease-in-out infinite alternate}
+@keyframes breathe{from{opacity:.55}to{opacity:1}}
+.fx .core{transform-box:fill-box;transform-origin:center;animation:corep 5s ease-in-out infinite alternate}
+@keyframes corep{from{transform:scale(.8);opacity:.7}to{transform:scale(1.25);opacity:1}}
+.fx .sp circle{animation:tw 3.4s ease-in-out infinite alternate;opacity:.2}
+@keyframes tw{to{opacity:1}}
+.fx .orbit{fill:none;stroke:url(#a3);stroke-width:1.2;stroke-opacity:.5;transform-box:fill-box;transform-origin:center;animation:spin 60s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.fx *{animation:none!important}}
+.fxc{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+
+/* ===== multi-page views ===== */
+.view{display:none}.view.on{display:block;animation:vin .55s ease both}
+@keyframes vin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+body.sub #gl3d{display:none}
+.nav-links a.act{color:var(--amber)}
+.wrap{width:min(1200px,100%);margin:0 auto;padding:0 max(24px,env(safe-area-inset-left,0px))}
+.pgsec{position:relative;overflow:hidden;z-index:2;padding:150px 0}
+.pgsec.tight{padding:90px 0}
+.pgh{padding:190px 0 120px}
+.pgh h1{font-size:clamp(2.5rem,6.4vw,5.2rem);line-height:1.02;font-weight:500;letter-spacing:-.035em;margin:14px 0 26px;max-width:15ch}
+.pgh .lead{max-width:560px;color:#DCE4F2;font-size:1.12rem;line-height:1.7;margin:0 0 34px}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border:1px solid var(--line);border-radius:999px;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);background:rgba(12,24,60,.45);}
+.chip i{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
+.h2{font-size:clamp(1.9rem,3.6vw,3.1rem);line-height:1.08;font-weight:500;letter-spacing:-.03em;margin:12px 0 14px;max-width:18ch}
+.sub2{color:#D0DAEC;max-width:540px;line-height:1.7;margin:0 0 56px}
+.shead{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;margin-bottom:56px}
+.shead .sub2{margin:0}
+/* cards */
+.card{position:relative;border:1px solid var(--line);border-radius:24px;background:linear-gradient(160deg,rgba(32,54,108,.55),rgba(12,24,58,.55));padding:30px}
+.grid{display:grid;gap:26px}
+.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:repeat(2,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+/* gradient brand-kit bento */
+.bento{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:150px;gap:22px}
+.bt{position:relative;overflow:hidden;border-radius:26px;padding:26px;color:#1A1233;transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s}
+.bt:hover{transform:translateY(-8px) rotate(-.4deg);box-shadow:0 30px 60px -20px rgba(0,0,0,.55)}
+.bt .tag{position:absolute;left:22px;bottom:18px;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;opacity:.7}
+.b1{grid-column:span 4;grid-row:span 2;background:linear-gradient(115deg,#FFE2C0 0%,#FF9FB4 45%,#9B74FF 100%)}
+.b2{grid-column:span 2;grid-row:span 4;background:radial-gradient(120% 80% at 80% 0%,#9B74FF,#3A2A86 55%,#160F3A);color:#fff;padding:0;display:flex;justify-content:center;align-items:flex-start}
+.b3{grid-column:span 2;grid-row:span 2;background:#0E1630;color:#fff;border:1px solid var(--line)}
+.b4{grid-column:span 2;grid-row:span 2;background:#fff}
+.b5{grid-column:span 4;grid-row:span 2;background:linear-gradient(120deg,#0E1B40,#1D3B7A);color:#fff;border:1px solid var(--line)}
+.b1 .brandrow{display:flex;align-items:center;gap:12px;font-weight:600;font-size:1.35rem;letter-spacing:-.02em}
+.b1 .dot{width:38px;height:38px;border-radius:12px;background:#1A1233;display:grid;place-items:center}
+.b1 .dot i{display:block;width:16px;height:16px;border:3px solid #FFB85C;border-radius:50%;border-right-color:transparent;transform:rotate(30deg)}
+.b1 .big{position:absolute;right:30px;top:34px;font-size:clamp(1.6rem,3.2vw,2.8rem);line-height:1.04;font-weight:600;letter-spacing:-.035em;text-align:right}
+.b1 .big em{font-style:normal;color:#fff;opacity:.9}
+.phone{width:78%;margin-top:34px;border-radius:34px 34px 0 0;border:2px solid rgba(255,255,255,.35);border-bottom:0;background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.04));padding:14px 14px 0;height:calc(100% - 34px);overflow:hidden}
+.sbars{display:flex;gap:4px;margin-bottom:12px}.sbars i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.35)}.sbars i:first-child{background:#fff;animation:sb 5s linear infinite}
+@keyframes sb{from{transform:scaleX(.1);transform-origin:left}to{transform:scaleX(1);transform-origin:left}}
+.story{height:100%;border-radius:22px 22px 0 0;background:linear-gradient(170deg,#FFC37A,#FF6F96 55%,#7C5CFF);padding:22px 18px;display:flex;flex-direction:column;justify-content:space-between;color:#1A1233}
+.story b{font-size:1.9rem;line-height:1;letter-spacing:-.04em}
+.story small{font-size:.72rem;opacity:.75}
+.story .btn{align-self:flex-start;background:#1A1233;color:#fff;border-radius:999px;padding:10px 16px;font-size:.78rem;margin-bottom:24px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:20px}
+.cal i{aspect-ratio:1;border-radius:7px;background:rgba(255,255,255,.08)}
+.cal i.h{background:linear-gradient(135deg,#FFB85C,#FF7E9D)}.cal i.c{background:rgba(97,232,255,.55)}
+.b3 h4,.b4 h4,.b5 h4{margin:0;font-size:1.05rem;font-weight:500}
+.b4 .hl{font-size:2rem;font-weight:600;letter-spacing:-.04em;line-height:1;margin-top:12px}
+.b4 .blob{position:absolute;right:-30px;bottom:-40px;width:150px;height:150px;border-radius:50%;background:linear-gradient(135deg,#FFB85C,#FF7E9D 50%,#9B74FF);filter:blur(2px);animation:blobm 9s ease-in-out infinite alternate}
+@keyframes blobm{to{transform:translate(-18px,-14px) scale(1.12)}}
+.slides{display:flex;margin-top:18px;gap:0}
+.slides i{width:112px;height:110px;border-radius:16px;margin-right:-26px;border:1px solid rgba(255,255,255,.25);display:grid;place-items:center;font-style:normal;font-weight:600;font-size:1.3rem;box-shadow:-8px 0 20px rgba(0,0,0,.3);transition:transform .4s}
+.bt:hover .slides i:nth-child(n){transform:translateX(calc(var(--k)*10px))}
+.slides i:nth-child(1){background:linear-gradient(150deg,#FFC37A,#FF7E9D);color:#1A1233;--k:0}
+.slides i:nth-child(2){background:linear-gradient(150deg,#FF7E9D,#9B74FF);--k:1}
+.slides i:nth-child(3){background:linear-gradient(150deg,#9B74FF,#3C2A9A);--k:2}
+.slides i:nth-child(4){background:linear-gradient(150deg,#3C8AFF,#61E8FF);color:#06203A;--k:3}
+.slides i:nth-child(5){background:linear-gradient(150deg,#61E8FF,#D9FBFF);color:#06203A;--k:4}
+/* service cards */
+.sc{display:flex;flex-direction:column;gap:14px;transition:transform .4s cubic-bezier(.2,.8,.2,1),border-color .3s}
+.sc:hover{transform:translateY(-8px);border-color:rgba(97,232,255,.55)}
+.ico{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(255,184,92,.22),rgba(97,232,255,.22));border:1px solid var(--line)}
+.ico svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.sc h3{margin:6px 0 0;font-size:1.35rem;font-weight:500;letter-spacing:-.02em}
+.sc p{margin:0;color:#D0DAEC;line-height:1.65;font-size:.95rem}
+.sc ul{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-direction:column;gap:9px;font-size:.88rem;color:#C5D0E6}
+.sc li{display:flex;gap:10px;align-items:center}.sc li::before{content:"";width:6px;height:6px;border-radius:2px;background:var(--amber);flex:none}
+.sc .seg{margin-top:auto;padding-top:18px}
+/* segmented bars */
+.seg{display:flex;align-items:flex-end;gap:5px;--c:var(--amber)}
+.seg .col{display:flex;flex-direction:column-reverse;gap:3px;flex:1}
+.seg .cell{height:var(--ch,8px);border-radius:2px;background:rgba(255,255,255,.07);transition:background .5s,box-shadow .5s;transition-delay:var(--d,0s)}
+.seg.on .cell.lit{background:var(--c)}
+.seg.on .cell.lit.hi{box-shadow:0 0 10px -1px var(--c)}
+.seg.cy{--c:var(--cyan)}
+/* dashboard */
+.dash{border:1px solid var(--line);border-radius:30px;background:linear-gradient(170deg,rgba(18,32,72,.78),rgba(8,16,40,.82));padding:0;overflow:hidden;box-shadow:0 60px 120px -40px rgba(0,0,0,.6)}
+.dbar{display:flex;align-items:center;gap:8px;padding:16px 22px;border-bottom:1px solid var(--line);font-size:.8rem;color:var(--muted)}
+.dbar i{width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,.2)}.dbar i:nth-child(1){background:#FF7E9D}.dbar i:nth-child(2){background:#FFB85C}.dbar i:nth-child(3){background:#61E8FF}
+.dbar span{margin-left:12px}
+.dbody{padding:26px;display:grid;gap:22px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.kpi{border:1px solid var(--line);border-radius:20px;padding:20px;background:rgba(255,255,255,.03);display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:center}
+.kpi .ico{grid-row:1/3;width:44px;height:44px}
+.kpi small{color:var(--muted);font-size:.74rem}
+.kpi b{font-size:1.7rem;font-weight:500;letter-spacing:-.03em;grid-column:2}
+.kpi .dl{grid-column:1/3;margin-top:10px;font-size:.76rem;display:flex;gap:8px;align-items:center;color:var(--muted)}
+.dl em{font-style:normal;padding:3px 9px;border-radius:999px;background:rgba(97,232,255,.14);color:var(--cyan)}
+.drow{display:grid;grid-template-columns:1.7fr 1fr;gap:18px}
+.panel{border:1px solid var(--line);border-radius:22px;padding:24px;background:rgba(255,255,255,.025)}
+.panel h4{margin:0 0 4px;font-size:1rem;font-weight:500}.panel .m{color:var(--muted);font-size:.78rem;margin-bottom:20px}
+.bigseg{height:250px;--ch:7px}.bigseg .col{justify-content:flex-start}
+.months{display:flex;gap:5px;margin-top:10px;font-size:.68rem;color:var(--muted)}.months span{flex:1;text-align:center}
+.donutwrap{display:flex;align-items:center;gap:26px;flex-wrap:wrap}
+.donut{width:170px;height:170px;transform:rotate(-90deg)}
+.donut circle{fill:none;stroke-width:9;stroke-dasharray:0 100;transition:stroke-dasharray 1.6s cubic-bezier(.2,.8,.2,1)}
+.donut.on circle{stroke-dasharray:var(--a) 100}
+.legend{display:flex;flex-direction:column;gap:10px;font-size:.84rem;color:#D0DAEC}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:10px}
+.line{width:100%;height:150px;overflow:visible}
+.line .ln{fill:none;stroke:url(#lg);stroke-width:2.4;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 2.4s ease}
+.line.on .ln{stroke-dashoffset:0}
+.line .ar{opacity:0;transition:opacity 1.6s ease .8s}.line.on .ar{opacity:1}
+.tbl{width:100%;border-collapse:collapse;font-size:.88rem}
+.tbl th{font-weight:400;color:var(--muted);text-align:left;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;padding:0 12px 14px}
+.tbl td{padding:15px 12px;border-top:1px solid var(--line);color:#E4EAF6}
+.pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:.72rem;border:1px solid var(--line)}
+.p-live{background:rgba(97,232,255,.14);color:var(--cyan);border-color:rgba(97,232,255,.4)}
+.p-rev{background:rgba(255,184,92,.14);color:var(--amber);border-color:rgba(255,184,92,.4)}
+.p-prog{background:rgba(155,116,255,.18);color:#C9B5FF;border-color:rgba(155,116,255,.45)}
+.pb{height:6px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden;min-width:90px}
+.pb i{display:block;height:100%;width:0;border-radius:4px;background:linear-gradient(90deg,var(--amber),#FF7E9D);transition:width 1.6s cubic-bezier(.2,.8,.2,1)}
+.on .pb i,.pb.on i{width:var(--w)}
+.wl{display:flex;flex-direction:column;gap:18px}
+.wl div{display:grid;grid-template-columns:70px 1fr 44px;gap:14px;align-items:center;font-size:.84rem;color:#D0DAEC}
+/* workflow board */
+.board{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.bcol{border:1px solid var(--line);border-radius:22px;padding:18px;background:rgba(255,255,255,.03);display:flex;flex-direction:column;gap:14px}
+.bcol h4{margin:0;display:flex;justify-content:space-between;font-size:.82rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--amber)}
+.bcol h4 span{color:var(--muted)}
+.bc{border-radius:16px;padding:16px;background:linear-gradient(160deg,rgba(48,76,150,.5),rgba(20,36,84,.6));border:1px solid var(--line);font-size:.88rem;line-height:1.5;display:flex;flex-direction:column;gap:12px;transition:transform .3s}
+.bc:hover{transform:translateY(-4px)}
+.bc small{color:var(--muted);font-size:.72rem}
+.cta{border-radius:34px;padding:70px 40px;text-align:center;background:linear-gradient(120deg,rgba(255,184,92,.9),rgba(255,126,157,.9) 50%,rgba(139,107,255,.95));color:#1A1233;position:relative;overflow:hidden}
+.cta h2{margin:0 auto 14px;font-size:clamp(2rem,4.4vw,3.6rem);letter-spacing:-.035em;line-height:1.04;font-weight:600;max-width:16ch}
+.cta p{margin:0 auto 30px;max-width:480px;opacity:.8}
+.cta .btnd{display:inline-flex;gap:10px;background:#1A1233;color:#fff;padding:16px 30px;border-radius:999px;font-weight:500;transition:transform .3s}
+.cta .btnd:hover{transform:scale(1.05)}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.8,.2,1);transition-delay:var(--rd,0s)}
+.reveal.on{opacity:1;transform:none}
+.moreLink{display:inline-flex;gap:8px;margin-top:14px;color:var(--cyan)}
+@media (max-width:1000px){.g3,.g4,.kpis,.board{grid-template-columns:repeat(2,1fr)}.drow{grid-template-columns:1fr}.bento{grid-template-columns:repeat(2,1fr);grid-auto-rows:170px}.b1,.b5{grid-column:span 2}.b2{grid-column:span 2;grid-row:span 3}.b3,.b4{grid-column:span 1;grid-row:span 2}}
+@media (max-width:640px){.g2,.g3,.g4,.kpis,.board{grid-template-columns:1fr}.pgsec{padding:90px 0}.pgh{padding:140px 0 80px}.dbody{padding:14px}.b3,.b4{grid-column:span 2}.tbl .hm{display:none}.cta{padding:50px 22px}}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}.view.on{animation:none}.seg .cell,.pb i{transition:none}}
+
+.foot-logo{width:150px;height:auto;display:block;flex-basis:100%;margin:0 auto 8px}
+.site-footer{padding-top:60px}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;align-items:stretch}
+.plan{position:relative;display:flex;flex-direction:column;gap:18px;padding:34px 30px 30px;border-radius:30px;border:1px solid var(--line);background:linear-gradient(165deg,rgba(34,58,116,.6),rgba(10,20,50,.7));transition:transform .45s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .4s}
+.plan:hover{transform:translateY(-10px);border-color:rgba(97,232,255,.55);box-shadow:0 40px 80px -30px rgba(0,0,0,.6)}
+.plan.pop{background:linear-gradient(165deg,rgba(255,226,196,.16),rgba(255,126,157,.14) 45%,rgba(139,107,255,.22));border-color:rgba(255,184,92,.7);box-shadow:0 0 0 1px rgba(255,184,92,.25),0 50px 100px -40px rgba(255,126,157,.45)}
+.plan.pop::before{content:"";position:absolute;inset:-1px;border-radius:30px;padding:1.5px;background:linear-gradient(135deg,#FFB85C,#FF7E9D,#8B6BFF);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);padding:7px 16px;border-radius:999px;background:linear-gradient(120deg,#FFB85C,#FF7E9D);color:#1A1233;font-size:.68rem;font-weight:700;letter-spacing:.14em;white-space:nowrap}
+.plan .pn{font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;color:var(--amber);font-weight:600}
+.plan .price{display:flex;align-items:baseline;gap:10px}
+.plan .price b{font-size:clamp(2.4rem,4vw,3.3rem);font-weight:500;letter-spacing:-.04em;line-height:1}
+.plan .price span{color:var(--muted);font-size:.92rem}
+.plan .meta{display:flex;flex-direction:column;gap:10px;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:.9rem;color:#D0DAEC;line-height:1.5}
+.plan .meta b{display:block;color:#fff;font-weight:500;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;opacity:.7;margin-bottom:2px}
+.plan h4{margin:6px 0 2px;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan);font-weight:600}
+.plan ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;font-size:.92rem;color:#E4EAF6;line-height:1.45}
+.plan li{display:grid;grid-template-columns:20px 1fr;gap:10px;align-items:start}
+.plan li::before{content:"";width:18px;height:18px;margin-top:1px;border-radius:6px;background:linear-gradient(135deg,rgba(255,184,92,.9),rgba(255,126,157,.9));-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M4 9.5l3.2 3L14 5.5' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M4 9.5l3.2 3L14 5.5' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat}
+.plan .go{margin-top:auto;display:flex;justify-content:center;gap:10px;padding:16px 22px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.06);font-weight:500;transition:transform .3s,background .3s}
+.plan .go:hover{transform:scale(1.03);background:rgba(255,255,255,.14)}
+.plan.pop .go{background:linear-gradient(120deg,#FFB85C,#FF7E9D 55%,#8B6BFF);color:#1A1233;border-color:transparent;font-weight:600}
+.plan .gap{flex:1}
+.note{margin:34px auto 0;max-width:780px;text-align:center;color:#C5D0E6;font-size:.92rem;line-height:1.7;padding:18px 24px;border:1px dashed var(--line);border-radius:18px}
+.cmp{width:100%;border-collapse:separate;border-spacing:0;font-size:.92rem;min-width:640px}
+.cmp th,.cmp td{padding:18px 20px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.5}
+.cmp thead th{font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);font-weight:600;position:sticky;top:0}
+.cmp tbody th{color:var(--muted);font-weight:400;width:22%}
+.cmp td{color:#E4EAF6}
+.cmp td.dim{color:#7F8AA3}
+.cmp .hl{background:linear-gradient(180deg,rgba(255,184,92,.08),rgba(255,126,157,.05))}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:24px;background:rgba(10,20,50,.86);}
+.addons{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.ad{display:flex;flex-direction:column;gap:8px;padding:26px}
+.ad .ap{font-size:1.9rem;font-weight:500;letter-spacing:-.03em}
+.ad .ap small{font-size:.82rem;color:var(--muted);letter-spacing:0;margin-left:8px}
+.ad h3{margin:6px 0 0;font-size:1.1rem;font-weight:500}
+.ad p{margin:0;color:#C5D0E6;font-size:.9rem;line-height:1.6}
+.steps3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;counter-reset:s}
+.steps3 .card{counter-increment:s}
+.steps3 .card::before{content:"0" counter(s);display:block;font-size:.72rem;letter-spacing:.18em;color:var(--amber);margin-bottom:14px}
+@media (max-width:1000px){.plans,.addons,.steps3{grid-template-columns:1fr}.plan.pop{order:-1}}
+
+/* ===== lite: no blur filters, solid cards so text always reads ===== */
+.orb{display:none}
+.card{background:linear-gradient(160deg,rgba(30,50,102,.96),rgba(14,26,62,.96))}
+.plan{background:linear-gradient(165deg,rgba(30,50,102,.97),rgba(12,22,54,.97))}
+.plan.pop{background:linear-gradient(165deg,#3B3068,#2A2058 55%,#2B2262)}
+.pr{background:rgba(24,42,92,.94)}
+.chip{background:rgba(14,26,62,.9)}
+.dash{background:rgba(10,20,50,.97)}
+.tablewrap{background:rgba(10,20,50,.97)}
+.bcol{background:rgba(14,26,62,.9)}
+.note{background:rgba(10,20,50,.9)}
+.sec .col .sub,.sec h2,.sec .kicker{position:relative}
+.soc{gap:12px}.soc svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}.soc-row{gap:16px}
+</style>
+<div class="signal-field" aria-hidden="true">
+      <div class="field-glow field-glow--amber"></div>
+      <div class="field-glow field-glow--cyan"></div>
+      <div class="field-grain"></div>
+      <div class="orb orb--a"></div><div class="orb orb--b"></div><div class="orb orb--c"></div>
+      <svg class="field-lines" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" role="presentation">
+        <defs>
+          <linearGradient id="amberBeam" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#ffb85c" stop-opacity="0" />
+            <stop offset=".52" stop-color="#ffb85c" stop-opacity=".78" />
+            <stop offset="1" stop-color="#fff5d9" stop-opacity=".96" />
+          </linearGradient>
+          <linearGradient id="cyanBeam" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0" stop-color="#61e8ff" stop-opacity="0" />
+            <stop offset=".6" stop-color="#61e8ff" stop-opacity=".7" />
+            <stop offset="1" stop-color="#e3fcff" stop-opacity=".92" />
+          </linearGradient>
+          <filter id="softBeam" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="13" />
+          </filter>
+          <filter id="sharpBeam" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="2.5" />
+          </filter>
+          <radialGradient id="core" cx="50%" cy="50%" r="50%">
+            <stop offset="0" stop-color="#fffdf5" stop-opacity="1" />
+            <stop offset=".3" stop-color="#d9fbff" stop-opacity=".8" />
+            <stop offset="1" stop-color="#8feaff" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+        <g class="beams beams--soft" filter="url(#softBeam)">
+          <path d="M -80 55 C 310 104 430 280 790 500" stroke="url(#amberBeam)" stroke-width="28" fill="none" />
+          <path d="M 1680 55 C 1290 104 1170 280 810 500" stroke="url(#amberBeam)" stroke-width="28" fill="none" />
+          <path d="M -70 1030 C 240 930 520 730 790 505" stroke="url(#cyanBeam)" stroke-width="24" fill="none" />
+          <path d="M 1670 1030 C 1360 930 1080 730 810 505" stroke="url(#cyanBeam)" stroke-width="24" fill="none" />
+        </g>
+        <g class="beams beams--sharp" filter="url(#sharpBeam)">
+          <path d="M -80 55 C 310 104 430 280 790 500" stroke="url(#amberBeam)" stroke-width="2.2" fill="none" />
+          <path d="M 1680 55 C 1290 104 1170 280 810 500" stroke="url(#amberBeam)" stroke-width="2.2" fill="none" />
+          <path d="M -70 1030 C 240 930 520 730 790 505" stroke="url(#cyanBeam)" stroke-width="2" fill="none" />
+          <path d="M 1670 1030 C 1360 930 1080 730 810 505" stroke="url(#cyanBeam)" stroke-width="2" fill="none" />
+        </g>
+        <g class="sparkles" fill="#ecfdff">
+          <circle cx="310" cy="790" r="1.3" /><circle cx="420" cy="684" r="1.9" /><circle cx="1196" cy="730" r="1.2" />
+          <circle cx="1300" cy="818" r="1.5" /><circle cx="610" cy="865" r="1.1" /><circle cx="994" cy="884" r="1.7" />
+          <circle cx="746" cy="626" r="1" /><circle cx="862" cy="642" r="1.4" />
+        </g>
+        <circle class="field-core" cx="800" cy="500" r="66" fill="url(#core)" />
+        <circle class="field-core-dot" cx="800" cy="500" r="3.8" fill="#fffdf6" />
+      </svg>
+      <span class="sr-only">Abstract amber and cyan light streams converging through deep blue haze.</span>
+    </div>
+
+    <div class="veil" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <a class="brand" href="#top" data-r="home" aria-label="Magic Media home">
+        <img class="brand-logo" alt="" src="data:image/png;base64,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">
+        <span class="brand-name">MAGIC MEDIA</span>
+      </a>
+
+      <input class="nav-toggle" type="checkbox" id="nav-open" aria-label="Toggle navigation" />
+      <label class="menu-button" for="nav-open"><span class="menu-icon" aria-hidden="true"><i></i><i></i><i></i></span><span class="sr-only">Open navigation</span></label>
+      <label class="nav-scrim" for="nav-open" aria-hidden="true"></label>
+
+      <div class="nav-shell">
+        <nav class="nav-links" aria-label="Primary navigation">
+          <a href="#/services" data-r="services">Services</a>
+          <a href="#/plans" data-r="plans">Plans</a>
+          <a href="#/results" data-r="results">Results</a>
+          <a href="#approach">Approach</a>
+          <a href="#contact">Contact</a>
+        </nav>
+        <div class="nav-actions">
+          <a class="nav-secondary" href="https://wa.me/917904526442" target="_blank" rel="noopener">Start a conversation <span aria-hidden="true">↗</span></a>
+          <a class="button button--small" href="#/services">Explore services <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </header>
+
+    <div id="v-home" class="view on">
+<main id="top" class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">MAGIC MEDIA <span>/</span> DIGITAL MARKETING STUDIO</p>
+        <h1><span>Turn attention into</span><span>lasting growth.</span></h1>
+        <p class="subhead"><span>We align sharp strategy, magnetic creative</span><span>and performance that compounds.</span></p>
+        <a class="button button--hero" href="#/services">Explore our services <span aria-hidden="true">↗</span></a>
+      </div>
+
+      <div class="service-row" id="capabilities" aria-label="Magic Media capabilities">
+        <a href="#approach"><span class="service-index">01</span> Strategy <span class="service-arrow" aria-hidden="true">↗</span></a>
+        <a href="#approach"><span class="service-index">02</span> Creative <span class="service-arrow" aria-hidden="true">↗</span></a>
+        <a href="#approach"><span class="service-index">03</span> Performance <span class="service-arrow" aria-hidden="true">↗</span></a>
+        <a href="#approach"><span class="service-index">04</span> Growth <span class="service-arrow" aria-hidden="true">↗</span></a>
+      </div>
+      <div class="hero-rule" aria-hidden="true"></div>
+    </main>
+
+    
+<div class="sections">
+
+  <section class="sec" id="services">
+    <canvas class="fxc" aria-hidden="true"></canvas>
+    <div class="in">
+      <div class="col">
+        <span class="kicker">Services</span>
+        <h2>Six ways we bring customers in.</h2>
+        <p class="sub">Pick one, or run them together. Everything points to the same place: your WhatsApp.</p>
+        <a class="moreLink" href="#/services">See all services and creative <span aria-hidden="true">→</span></a>
+        <div class="svc-list">
+          <a class="svc" data-i="0" href="https://wa.me/917904526442" target="_blank" rel="noopener"><span class="svc-n">01</span><span class="svc-t">Meta Ads</span><span class="svc-d">Facebook and Instagram campaigns aimed at people near you, built to send enquiries straight to WhatsApp.</span></a>
+          <a class="svc" data-i="1" href="https://wa.me/917904526442" target="_blank" rel="noopener"><span class="svc-n">02</span><span class="svc-t">Google Ads</span><span class="svc-d">Appear when someone searches for what you sell, with calls and map visits you can count.</span></a>
+          <a class="svc" data-i="2" href="https://wa.me/917904526442" target="_blank" rel="noopener"><span class="svc-n">03</span><span class="svc-t">Reels and video</span><span class="svc-d">Short, carefully cut videos with captions and sound that people watch to the end.</span></a>
+          <a class="svc" data-i="3" href="https://wa.me/917904526442" target="_blank" rel="noopener"><span class="svc-n">04</span><span class="svc-t">Websites</span><span class="svc-d">Fast, mobile-first sites with your services, your location and a direct WhatsApp button.</span></a>
+          <a class="svc" data-i="4" href="https://wa.me/917904526442" target="_blank" rel="noopener"><span class="svc-n">05</span><span class="svc-t">WhatsApp automation</span><span class="svc-d">Instant replies, with every new contact saved to a Google Sheet so no enquiry goes cold.</span></a>
+          <a class="svc" data-i="5" href="https://wa.me/917904526442" target="_blank" rel="noopener"><span class="svc-n">06</span><span class="svc-t">Lead generation</span><span class="svc-d">Ads, landing pages and follow-ups that bring you contact details, not just likes.</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="half">
+    <section class="sec" id="approach">
+    <canvas class="fxc" aria-hidden="true"></canvas>
+    <div class="in">
+      <div class="col r">
+        <span class="kicker">Approach</span>
+        <h2>Four steps from hello to results.</h2>
+        <ol class="steps" id="steps">
+          <li class="step"><span class="n">01</span><div><h3>Discover</h3><p>You tell us what you sell and who you want to reach. We look at what your competitors run.</p></div></li>
+          <li class="step"><span class="n">02</span><div><h3>Plan</h3><p>We choose the offer, the channel and a daily ad budget that fits your business.</p></div></li>
+          <li class="step"><span class="n">03</span><div><h3>Launch</h3><p>Ads, videos and pages go live, with WhatsApp replies ready before the first click.</p></div></li>
+          <li class="step"><span class="n">04</span><div><h3>Measure</h3><p>Every enquiry is counted. We keep what works and change what does not.</p></div></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="studio">
+    <canvas class="fxc" aria-hidden="true"></canvas>
+    <div class="in">
+      <div class="col">
+        <span class="kicker">Studio</span>
+        <h2>A small studio that counts every enquiry.</h2>
+        <p class="sub">Magic Media is a digital marketing studio in Chennai for small and growing businesses. We run the ads, cut the videos, build the site and set up the WhatsApp replies, so getting a customer happens in one place.</p>
+        <div class="pr-list">
+          <div class="pr"><h3>WhatsApp first</h3><p>Customers already message businesses there. We send ads and sites straight to it.</p></div>
+          <div class="pr"><h3>Every enquiry counted</h3><p>New contacts are saved to a sheet, so you can see what each ad brought in.</p></div>
+          <div class="pr"><h3>Built for small budgets</h3><p>We start with a daily ad budget that fits, then adjust as the results come.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="contact">
+    <canvas class="fxc" aria-hidden="true"></canvas>
+    <div class="in">
+      <div class="col r">
+        <span class="kicker">Contact</span>
+        <h2>Start a conversation.</h2>
+        <p class="sub">Send your business name and what you want to grow. We reply with a plan.</p>
+        <p class="sub" style="margin-top:-6px">Message us on WhatsApp, or follow us on Instagram and Facebook.</p>
+        <div class="row2 soc-row">
+          <a class="button button--hero soc" href="https://wa.me/917904526442" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.4-4.2A8 8 0 1 1 8.3 18.6z"/><path d="M9 9c0 3 3 6 6 6"/></svg>WhatsApp <span aria-hidden="true">↗</span></a>
+          <a class="button button--hero soc" href="https://www.instagram.com/_.magic_media._/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6"/></svg>Instagram <span aria-hidden="true">↗</span></a>
+          <a class="button button--hero soc" href="https://www.facebook.com/profile.php?id=61595099946331" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v6h4v-6h3l1-4h-4V8.5A.5.5 0 0 1 14 8z"/></svg>Facebook <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  </div>
+
+</div>
+
+</div>
+<div id="v-services" class="view">
+<section class="pgsec pgh" data-fx="pgA"><canvas class="fxc" aria-hidden="true"></canvas>
+ <div class="wrap"><span class="chip"><i></i>Services</span>
+ <h1>Everything that brings customers in.</h1>
+ <p class="lead">Ads, video, websites and WhatsApp, designed to look like one brand and built to send every enquiry to the same place: your phone.</p>
+ <div style="display:flex;gap:14px;flex-wrap:wrap"><a class="button button--hero" href="#/plans">See our plans <span aria-hidden="true">→</span></a><a class="button button--hero" href="https://wa.me/917904526442" target="_blank" rel="noopener">Talk on WhatsApp <span aria-hidden="true">↗</span></a></div></div></section>
+
+<section class="pgsec" style="padding-top:40px"><div class="wrap">
+ <div class="shead"><div><span class="kicker">Creative</span><h2 class="h2">One brand, on every screen.</h2></div><p class="sub2">Post designs, stories, reels and carousels that match each other, so people recognise you before they read your name.</p></div>
+ <div class="bento reveal">
+  <div class="bt b1"><div class="brandrow"><span class="dot"><i></i></span>Your Brand</div><div class="big">Post.<br>Story.<br><em>Reel.</em></div><span class="tag">Social media kit</span></div>
+  <div class="bt b2"><div class="phone"><div class="sbars"><i></i><i></i><i></i></div><div class="story"><small>Festival offer</small><b>Flat 30%<br>off today</b><span class="btn">Chat on WhatsApp →</span></div></div></div>
+  <div class="bt b3"><h4>Posting calendar</h4><div class="cal"><i class=""></i><i class=""></i><i class="h"></i><i class=""></i><i class="c"></i><i class=""></i><i class="h"></i><i class=""></i><i class=""></i><i class="h"></i><i class=""></i><i class="c"></i><i class=""></i><i class="h"></i><i class=""></i><i class=""></i><i class="h"></i><i class=""></i><i class="c"></i><i class=""></i><i class="h"></i><i class=""></i><i class=""></i><i class="h"></i><i class=""></i><i class="c"></i><i class=""></i><i class="h"></i></div></div>
+  <div class="bt b4"><h4>New arrivals</h4><div class="hl">Just<br>landed.</div><div class="blob"></div></div>
+  <div class="bt b5"><h4>Carousel that gets saved</h4><div class="slides"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i></div><span class="tag" style="color:#fff">Swipe-ready posts</span></div>
+ </div></div></section>
+
+<section class="pgsec" data-fx="pgB" style="padding-top:60px"><canvas class="fxc" aria-hidden="true"></canvas><div class="wrap">
+ <div class="shead"><div><span class="kicker">What we run</span><h2 class="h2">Six ways we bring customers in.</h2></div><p class="sub2">Pick one, or run them together. Each comes with a clear report, so you see what the money did.</p></div>
+ <div class="grid g3"><article class="card sc reveal" style="--rd:0.0s"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></span><h3>Meta Ads</h3><p>Facebook and Instagram campaigns aimed at people near you, built to send enquiries straight to WhatsApp.</p><ul><li>Area and audience targeting</li><li>Creative testing every week</li><li>Chats land on WhatsApp</li></ul><div class="seg" data-seg="3,4,3,5,6,5,7,8" data-rows="9" data-ch="6" ></div></article><article class="card sc reveal" style="--rd:0.1s"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M16 16l5 5"/></svg></span><h3>Google Ads</h3><p>Show up when someone searches for what you sell, with calls and map visits you can count.</p><ul><li>Search ads for what you sell</li><li>Call and map-visit tracking</li><li>Weekly budget review</li></ul><div class="seg" data-seg="2,3,4,4,5,6,6,7" data-rows="9" data-ch="6" data-cy="1"></div></article><article class="card sc reveal" style="--rd:0.2s"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="14" height="14" rx="3"/><path d="M17 10l4-2v8l-4-2"/></svg></span><h3>Reels and video</h3><p>Short, carefully cut videos with captions and sound that people watch to the end.</p><ul><li>Script and shoot guidance</li><li>Edit with captions and sound</li><li>Posting schedule</li></ul><div class="seg" data-seg="4,3,6,5,7,6,8,9" data-rows="9" data-ch="6" ></div></article><article class="card sc reveal" style="--rd:0.0s"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18M8 14h4"/></svg></span><h3>Websites</h3><p>Fast, mobile-first pages with a WhatsApp button on every screen.</p><ul><li>Mobile-first design</li><li>Fast loading</li><li>WhatsApp button everywhere</li></ul><div class="seg" data-seg="5,5,6,6,7,7,8,8" data-rows="9" data-ch="6" data-cy="1"></div></article><article class="card sc reveal" style="--rd:0.1s"><span class="ico"><svg viewBox="0 0 24 24"><path d="M4 20l1.4-4.2A8 8 0 1 1 8.3 18.6z"/><path d="M9 9c0 3 3 6 6 6"/></svg></span><h3>WhatsApp automation</h3><p>Instant replies, with every new contact saved to a Google Sheet so no enquiry goes cold.</p><ul><li>Instant first reply</li><li>Contacts saved to a sheet</li><li>Follow-up messages</li></ul><div class="seg" data-seg="2,4,5,7,6,8,9,9" data-rows="9" data-ch="6" ></div></article><article class="card sc reveal" style="--rd:0.2s"><span class="ico"><svg viewBox="0 0 24 24"><path d="M4 5h16l-6 8v6l-4-2v-4z"/></svg></span><h3>Lead generation</h3><p>Ads, landing pages and follow-ups that bring you contact details, not just likes.</p><ul><li>Ad plus landing page</li><li>Enquiry form to your sheet</li><li>Follow-up flow</li></ul><div class="seg" data-seg="3,3,5,6,6,8,7,9" data-rows="9" data-ch="6" data-cy="1"></div></article></div></div></section>
+
+<section class="pgsec"><div class="wrap">
+ <div class="shead"><div><span class="kicker">How a month runs</span><h2 class="h2">A clear board, start to finish.</h2></div><p class="sub2">You always know what is being made, what is live and what is being measured. Sample board shown.</p></div>
+ <div class="board reveal">
+  <div class="bcol"><h4>Brief <span>2</span></h4><div class="bc">Goals, budget and area agreed<small>Day 1</small></div><div class="bc">Brand colours and logo collected<small>Day 1</small></div></div>
+  <div class="bcol"><h4>Create <span>3</span></h4><div class="bc">Offer reel, edit and captions<div class="pb"><i style="--w:70%"></i></div></div><div class="bc">Post and story designs<div class="pb"><i style="--w:90%"></i></div></div><div class="bc">Landing page build<div class="pb"><i style="--w:45%"></i></div></div></div>
+  <div class="bcol"><h4>Launch <span>2</span></h4><div class="bc">Meta Ads campaign live<span class="pill p-live" style="align-self:flex-start">Live</span></div><div class="bc">WhatsApp auto-reply on<span class="pill p-live" style="align-self:flex-start">Live</span></div></div>
+  <div class="bcol"><h4>Measure <span>2</span></h4><div class="bc">Weekly report sent<small>Every Monday</small></div><div class="bc">Keep what works, change what does not<small>Monthly</small></div></div>
+ </div></div></section>
+
+<section class="pgsec tight" data-fx="pgC"><canvas class="fxc" aria-hidden="true"></canvas><div class="wrap"><div class="cta reveal"><h2>Tell us what you sell.</h2><p>Send your business name and what you want to grow. We reply with a plan.</p><a class="btnd" href="https://wa.me/917904526442" target="_blank" rel="noopener">Open WhatsApp <span aria-hidden="true">↗</span></a></div></div></section>
+</div>
+<div id="v-plans" class="view">
+<section class="pgsec pgh" data-fx="pgF"><canvas class="fxc" aria-hidden="true"></canvas>
+ <div class="wrap"><span class="chip"><i></i>Plans</span>
+ <h1>Choose your growth plan.</h1>
+ <p class="lead">Three monthly plans, from first steps to leading your market. Everything is handled start to finish by Magic Media. Meta ad budget is paid separately by you.</p>
+ <a class="button button--hero" href="#plans-list">Compare plans <span aria-hidden="true">↓</span></a></div></section>
+
+<section class="pgsec" id="plans-list" style="padding-top:60px"><div class="wrap">
+ <div class="plans"><article class="plan reveal" style="--rd:0.0s">
+<span class="pn">Foundation</span><div class="price"><b>₹29,999</b><span>/ month</span></div>
+<div class="meta"><div><b>Objective</b>Build visibility and trust</div><div><b>Ideal for</b>Local businesses and start-ups</div></div><h4>Content and creation</h4><ul><li>Social posts: 16 posts a month (Instagram + Facebook)</li><li>AI reels: 6 reels a month</li><li>Creatives: 2 festival or offer posters</li></ul><h4>Ads and performance</h4><ul><li>Meta Ads: 2 campaigns, setup and management</li><li>Reporting: monthly ads summary</li></ul><h4>Setup and presence</h4><ul><li>Google My Business: setup and optimisation</li><li>Website: add-on, ₹10,000 one-time</li></ul><span class="gap"></span>
+<a class="go" href="https://wa.me/917904526442?text=Hi%20Magic%20Media%2C%20I%20am%20interested%20in%20the%20Foundation%20plan." target="_blank" rel="noopener">Choose Foundation <span aria-hidden="true">→</span></a></article><article class="plan reveal pop" style="--rd:0.1s"><span class="badge">MOST POPULAR</span>
+<span class="pn">Accelerator</span><div class="price"><b>₹59,999</b><span>/ month</span></div>
+<div class="meta"><div><b>Objective</b>Generate leads and brand recall</div><div><b>Ideal for</b>SMEs ready for consistent leads</div></div><h4>Content and creation</h4><ul><li>Social posts: 24 posts plus stories a month</li><li>AI reels: 12 reels a month (3 per week)</li><li>Creatives: 4 festival posters plus 2 flyers</li></ul><h4>Ads and performance</h4><ul><li>Meta Ads: lead campaigns plus lead forms</li><li>Retargeting: reach people who visited before</li><li>Reporting: monthly report plus a review call</li></ul><h4>Setup and presence</h4><ul><li>Website: business website included</li><li>Google My Business: setup plus monthly updates</li></ul><span class="gap"></span>
+<a class="go" href="https://wa.me/917904526442?text=Hi%20Magic%20Media%2C%20I%20am%20interested%20in%20the%20Accelerator%20plan." target="_blank" rel="noopener">Choose Accelerator <span aria-hidden="true">→</span></a></article><article class="plan reveal" style="--rd:0.2s">
+<span class="pn">Growth Engine</span><div class="price"><b>₹99,999</b><span>/ month</span></div>
+<div class="meta"><div><b>Objective</b>Scale and lead your market</div><div><b>Ideal for</b>Growing brands targeting wider reach</div></div><h4>Content and creation</h4><ul><li>Social posts: 30 posts plus daily stories</li><li>AI reels: 20 reels a month (5 per week)</li><li>Creatives: 8 posters, 4 flyers and 1 brochure</li></ul><h4>Ads and performance</h4><ul><li>Meta Ads: unlimited campaigns plus retargeting</li><li>A/B testing: test ads to find what works best</li><li>Reporting: weekly updates plus 2 review calls</li></ul><h4>Setup and presence</h4><ul><li>Website: premium multi-page website</li><li>Google My Business: full management plus review replies</li></ul><span class="gap"></span>
+<a class="go" href="https://wa.me/917904526442?text=Hi%20Magic%20Media%2C%20I%20am%20interested%20in%20the%20Growth%20Engine%20plan." target="_blank" rel="noopener">Choose Growth Engine <span aria-hidden="true">→</span></a></article></div>
+ <p class="note reveal">Ad budget is not included. It is paid separately and goes directly to Meta. Recommended: from ₹500 a day. A website, where included, is built in the first month. Video editing is not included and is quoted separately.</p>
+</div></section>
+
+<section class="pgsec" data-fx="pgG" style="padding-top:30px"><canvas class="fxc" aria-hidden="true"></canvas><div class="wrap">
+ <div class="shead"><div><span class="kicker">Side by side</span><h2 class="h2">What changes from plan to plan.</h2></div><p class="sub2">The middle plan is where most businesses start getting steady leads.</p></div>
+ <div class="tablewrap reveal"><table class="cmp"><thead><tr><th></th><th>Foundation<br><span style="color:#fff;letter-spacing:0;text-transform:none;font-size:1rem">₹29,999</span></th><th class="hl">Accelerator<br><span style="color:#fff;letter-spacing:0;text-transform:none;font-size:1rem">₹59,999</span></th><th>Growth Engine<br><span style="color:#fff;letter-spacing:0;text-transform:none;font-size:1rem">₹99,999</span></th></tr></thead><tbody><tr><th>Social posts</th><td class="">16 posts a month</td><td class="hl">24 posts plus stories</td><td class="">30 posts plus daily stories</td></tr><tr><th>AI reels</th><td class="">6 a month</td><td class="hl">12 a month (3 per week)</td><td class="">20 a month (5 per week)</td></tr><tr><th>Creatives</th><td class="">2 festival or offer posters</td><td class="hl">4 festival posters plus 2 flyers</td><td class="">8 posters, 4 flyers and 1 brochure</td></tr><tr><th>Meta Ads</th><td class="">2 campaigns, setup and management</td><td class="hl">Lead campaigns plus lead forms</td><td class="">Unlimited campaigns plus retargeting</td></tr><tr><th>Retargeting</th><td class="dim">-</td><td class="hl">Included</td><td class="">Included</td></tr><tr><th>A/B testing</th><td class="dim">-</td><td class="dim hl">-</td><td class="">Included</td></tr><tr><th>Reporting</th><td class="">Monthly ads summary</td><td class="hl">Monthly report plus review call</td><td class="">Weekly updates plus 2 review calls</td></tr><tr><th>Website</th><td class="">Add-on, ₹10,000 one-time</td><td class="hl">Business website included</td><td class="">Premium multi-page website</td></tr><tr><th>Google My Business</th><td class="">Setup and optimisation</td><td class="hl">Setup plus monthly updates</td><td class="">Full management plus review replies</td></tr></tbody></table></div>
+</div></section>
+
+<section class="pgsec"><div class="wrap">
+ <div class="shead"><div><span class="kicker">Or pick one thing</span><h2 class="h2">Need just one service?</h2></div><p class="sub2">Every service is also available on its own, at the prices below.</p></div>
+ <div class="addons"><article class="card ad reveal" style="--rd:0.0s"><div class="ap">₹10,000<small>one-time</small></div><h3>Website creation</h3><p>A fast, mobile-friendly website that shows your products, brands and contact details, so customers can find and trust you.</p></article><article class="card ad reveal" style="--rd:0.1s"><div class="ap">₹7,000<small>per month</small></div><h3>Meta Ads management</h3><p>We plan, design and run your Facebook and Instagram ad campaigns, aimed at the right customers in your area.</p></article><article class="card ad reveal" style="--rd:0.2s"><div class="ap">₹6,000<small>per month</small></div><h3>AI video reels</h3><p>4 reels a month, one every week, at ₹1,500 per reel, made to stop the scroll.</p></article><article class="card ad reveal" style="--rd:0.0s"><div class="ap">₹6,000<small>per month</small></div><h3>Social media posts</h3><p>12 designed posts a month for Instagram and Facebook, 3 every week, at ₹500 per post.</p></article><article class="card ad reveal" style="--rd:0.1s"><div class="ap">₹1,500<small>one-time</small></div><h3>Google My Business setup</h3><p>Get listed on Google Search and Maps with your address, timings, photos and phone number.</p></article><article class="card ad reveal" style="--rd:0.2s"><div class="ap">₹15,000<small>per month</small></div><h3>Meta ad budget</h3><p>₹500 a day for 30 days, spent directly on running your ads. Paid by you, straight to Meta.</p></article></div>
+</div></section>
+
+<section class="pgsec" data-fx="pgH"><canvas class="fxc" aria-hidden="true"></canvas><div class="wrap">
+ <div class="shead"><div><span class="kicker">Getting started</span><h2 class="h2">Three steps to begin.</h2></div></div>
+ <div class="steps3">
+  <article class="card sc reveal"><h3>Pick a plan</h3><p>Choose the plan that fits your business today. You can move up as you grow.</p></article>
+  <article class="card sc reveal" style="--rd:.1s"><h3>Send us a message</h3><p>Tap the button on a plan, or WhatsApp us your business name and what you want to grow.</p></article>
+  <article class="card sc reveal" style="--rd:.2s"><h3>We start in week one</h3><p>We collect your brand details, plan the month and get your first posts and ads moving.</p></article>
+ </div></div></section>
+
+<section class="pgsec tight"><div class="wrap"><div class="cta reveal"><h2>Not sure which plan?</h2><p>Tell us what you sell and your monthly budget. We will suggest the right one.</p><a class="btnd" href="https://wa.me/917904526442" target="_blank" rel="noopener">Ask on WhatsApp <span aria-hidden="true">↗</span></a></div></div></section>
+</div>
+<div id="v-results" class="view">
+<section class="pgsec pgh" data-fx="pgD"><canvas class="fxc" aria-hidden="true"></canvas>
+ <div class="wrap"><span class="chip"><i></i>Results</span>
+ <h1>See exactly what your marketing brings in.</h1>
+ <p class="lead">Every client gets a clear report: enquiries, cost per enquiry, which ads worked and what happens next. This is what it looks like.</p>
+ <a class="button button--hero" href="#contact">Get your own report <span aria-hidden="true">↗</span></a></div></section>
+
+<section class="pgsec" style="padding-top:20px"><div class="wrap">
+ <div class="dash reveal">
+  <div class="dbar"><i></i><i></i><i></i><span>Monthly report &nbsp;·&nbsp; Sample data, illustrative numbers only</span></div>
+  <div class="dbody">
+   <div class="kpis">
+    <div class="kpi"><span class="ico"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg></span><small>Enquiries</small><b data-count="248">0</b><div class="dl"><em>+18%</em> vs last month</div></div>
+    <div class="kpi"><span class="ico"><svg viewBox="0 0 24 24"><path d="M7 5h10M7 9h10M7 5c6 0 6 8 0 8l8 6"/></svg></span><small>Cost per enquiry</small><b>₹<span data-count="86">0</span></b><div class="dl"><em>-12%</em> vs last month</div></div>
+    <div class="kpi"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-4 3-6 6.5-6s6.5 2 6.5 6M16 5a3.5 3.5 0 0 1 0 7M18 14c2 .6 3.5 2.4 3.5 6"/></svg></span><small>WhatsApp chats</small><b data-count="1842">0</b><div class="dl"><em>+9%</em> vs last month</div></div>
+    <div class="kpi"><span class="ico"><svg viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span><small>People reached</small><b>3.4L</b><div class="dl"><em>+26%</em> vs last month</div></div>
+   </div>
+   <div class="drow">
+    <div class="panel"><h4>Enquiries, November to August</h4><div class="m">Each block is a group of enquiries</div><div class="seg bigseg" id="bigseg"></div><div class="months"><span>Nov</span><span>Dec</span><span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span></div></div>
+    <div class="panel"><h4>Where enquiries came from</h4><div class="m">Share of total</div>
+     <div class="donutwrap"><svg class="donut" viewBox="0 0 42 42" id="donut"><circle cx="21" cy="21" r="15.915" stroke="#FFB85C" style="--a:42" /><circle cx="21" cy="21" r="15.915" stroke="#61E8FF" style="--a:28" stroke-dashoffset="-42"/><circle cx="21" cy="21" r="15.915" stroke="#9B74FF" style="--a:20" stroke-dashoffset="-70"/><circle cx="21" cy="21" r="15.915" stroke="#FF7E9D" style="--a:10" stroke-dashoffset="-90"/></svg>
+     <div class="legend"><span><i style="background:#FFB85C"></i>Meta Ads 42%</span><span><i style="background:#61E8FF"></i>Google Ads 28%</span><span><i style="background:#9B74FF"></i>Reels 20%</span><span><i style="background:#FF7E9D"></i>Website 10%</span></div></div></div>
+   </div>
+   <div class="drow">
+    <div class="panel"><h4>Cost per enquiry</h4><div class="m">Coming down as we learn what works</div>
+     <svg class="line" id="line" viewBox="0 0 600 150" preserveAspectRatio="none"><defs><linearGradient id="lg" x1="0" x2="1"><stop offset="0" stop-color="#FFB85C"/><stop offset="1" stop-color="#61E8FF"/></linearGradient><linearGradient id="la" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#61E8FF" stop-opacity=".3"/><stop offset="1" stop-color="#61E8FF" stop-opacity="0"/></linearGradient></defs>
+     <path class="ar" d="M0 40 C60 30 100 70 150 62 S250 90 300 82 S400 110 450 100 S560 118 600 112 L600 150 L0 150Z" fill="url(#la)"/><path class="ln" pathLength="1" d="M0 40 C60 30 100 70 150 62 S250 90 300 82 S400 110 450 100 S560 118 600 112"/></svg></div>
+    <div class="panel"><h4>Team workload this week</h4><div class="m">Who is working on what</div><div class="wl"><div><span>Design</span><span class="pb"><i style="--w:72%"></i></span><span>72%</span></div><div><span>Ads</span><span class="pb"><i style="--w:58%"></i></span><span>58%</span></div><div><span>Video</span><span class="pb"><i style="--w:85%"></i></span><span>85%</span></div><div><span>Web</span><span class="pb"><i style="--w:44%"></i></span><span>44%</span></div></div></div>
+   </div>
+   <div class="panel"><h4>This week's tasks</h4><div class="m">What is being made and what is live</div><table class="tbl"><thead><tr><th>Task</th><th class="hm">Team</th><th>Status</th><th class="hm">Progress</th></tr></thead><tbody><tr><td>Offer reel for festival sale</td><td class="hm">Video</td><td><span class="pill p-rev">Review</span></td><td class="hm"><div class="pb"><i style="--w:80%"></i></div></td></tr><tr><td>Meta Ads: area A/B test</td><td class="hm">Ads</td><td><span class="pill p-live">Live</span></td><td class="hm"><div class="pb"><i style="--w:100%"></i></div></td></tr><tr><td>WhatsApp auto-reply flow</td><td class="hm">Automation</td><td><span class="pill p-live">Live</span></td><td class="hm"><div class="pb"><i style="--w:100%"></i></div></td></tr><tr><td>Landing page for new offer</td><td class="hm">Web</td><td><span class="pill p-prog">In progress</span></td><td class="hm"><div class="pb"><i style="--w:45%"></i></div></td></tr><tr><td>Monthly report for review</td><td class="hm">Reporting</td><td><span class="pill p-prog">In progress</span></td><td class="hm"><div class="pb"><i style="--w:60%"></i></div></td></tr></tbody></table></div>
+  </div></div></div></section>
+
+<section class="pgsec" data-fx="pgE"><canvas class="fxc" aria-hidden="true"></canvas><div class="wrap">
+ <div class="shead"><div><span class="kicker">How we read it</span><h2 class="h2">Numbers that lead to a decision.</h2></div><p class="sub2">A report is only useful if it changes what we do next month.</p></div>
+ <div class="grid g3">
+  <article class="card sc reveal"><span class="ico"><svg viewBox="0 0 24 24"><path d="M4 5h16l-6 8v6l-4-2v-4z"/></svg></span><h3>Keep what works</h3><p>The ads and posts that bring enquiries get more budget and more of our time.</p></article>
+  <article class="card sc reveal" style="--rd:.1s"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></span><h3>Fix what does not</h3><p>Weak creative, wrong area or a slow reply is found and changed within the week.</p></article>
+  <article class="card sc reveal" style="--rd:.2s"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18M8 14h4"/></svg></span><h3>Plan the next month</h3><p>We agree the next budget, offers and videos together before anything goes live.</p></article>
+ </div></div></section>
+
+<section class="pgsec tight"><div class="wrap"><div class="cta reveal"><h2>Want a report like this?</h2><p>Send your business name and what you want to grow. We reply with a plan.</p><a class="btnd" href="https://wa.me/917904526442" target="_blank" rel="noopener">Open WhatsApp <span aria-hidden="true">↗</span></a></div></div></section>
+</div>
+<footer class="site-footer">
+      <p>Built for brands ready to move with intention.</p>
+      <p>© 2026 Magic Media <span>·</span> Digital marketing, made magnetic.</p>
+    </footer>
+<script>
+(function(){
+  var t=document.getElementById('nav-open');
+  if(t){
+    document.querySelectorAll('.nav-shell a').forEach(function(a){a.addEventListener('click',function(){t.checked=false;});});
+    addEventListener('keydown',function(e){if(e.key==='Escape')t.checked=false;});
+  }
+  var cp=document.getElementById('copy'), ph=document.getElementById('phone');
+  cp&&cp.addEventListener('click',function(){
+    function sel(){var r=document.createRange();r.selectNodeContents(ph);var s=getSelection();s.removeAllRanges();s.addRange(r);cp.textContent='Number selected';}
+    try{navigator.clipboard.writeText('7904526442').then(function(){cp.textContent='Copied';setTimeout(function(){cp.textContent='Copy number'},1800)},sel);}catch(e){sel();}
+  });
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* fade the flat hero field as the page moves on; light the approach steps */
+  var field=document.querySelector('.signal-field'), stepsEl=document.getElementById('steps'), stepEls=[].slice.call(document.querySelectorAll('.step'));
+  var hoverIdx=-1;
+  [].slice.call(document.querySelectorAll('.svc')).forEach(function(a){
+    a.addEventListener('mouseenter',function(){hoverIdx=+a.getAttribute('data-i')});
+    a.addEventListener('focus',function(){hoverIdx=+a.getAttribute('data-i')});
+    a.addEventListener('mouseleave',function(){hoverIdx=-1});
+    a.addEventListener('blur',function(){hoverIdx=-1});
+  });
+  var stepP=0;
+  function sm(x){x=Math.max(0,Math.min(1,x));return x*x*(3-2*x)}
+  function onScroll(){
+    var h=innerHeight;
+    field.style.opacity=String(1-.72*sm(scrollY/(h*.8)));
+    var r=stepsEl.getBoundingClientRect();
+    stepP=Math.max(0,Math.min(1,(h*.72-r.top)/(r.height+h*.1)));
+    stepEls.forEach(function(s,i){s.classList.toggle('on',stepP>i*.22+.02||reduce)});
+  }
+  addEventListener('scroll',onScroll,{passive:true}); addEventListener('resize',onScroll); onScroll();
+
+})();
+
+/* ---- crisp strand-beam canvases (hero look, vector sharp) ---- */
+(function(){
+  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var cfg={services:{cx:.74,cy:.5,arms:['tl','bl','tr','br'],bend:1},approach:{cx:.26,cy:.52,arms:['tr','br','tl','bl'],bend:-1},studio:{cx:.74,cy:.48,arms:['tl','bl','tr','br'],bend:1},contact:{cx:.16,cy:.5,arms:['tl','bl'],bend:-1},pgA:{cx:.76,cy:.52,arms:['tl','bl','tr','br'],bend:1},pgB:{cx:.2,cy:.5,arms:['tr','br','tl','bl'],bend:-1},pgC:{cx:.5,cy:.5,arms:['tl','tr','bl','br'],bend:1},pgD:{cx:.74,cy:.5,arms:['tr','br','tl','bl'],bend:-1},pgE:{cx:.82,cy:.5,arms:['tl','bl','tr','br'],bend:1},pgF:{cx:.78,cy:.5,arms:['tl','bl','tr','br'],bend:1},pgG:{cx:.5,cy:.5,arms:['tl','tr','bl','br'],bend:1},pgH:{cx:.2,cy:.5,arms:['tr','br','tl','bl'],bend:-1}};
+  var AM='255,184,92',CY='97,232,255';
+  var list=[];
+  document.querySelectorAll('.sec,[data-fx]').forEach(function(sec){
+    var c=sec.querySelector('canvas.fxc'),k=cfg[sec.getAttribute('data-fx')||sec.id];if(!c||!k)return;
+    var o={sec:sec,c:c,x:c.getContext('2d'),k:k,vis:false,W:0,H:0,seed:Math.random()*10};
+    list.push(o);
+  });
+  function size(o){
+    var r=o.sec.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,1.5);
+    o.W=r.width;o.H=r.height;o.c.width=Math.round(o.W*d);o.c.height=Math.round(o.H*d);o.x.setTransform(d,0,0,d,0,0);
+  }
+  function arm(o,a,t){
+    var W=o.W,H=o.H,x=o.x,k=o.k,cx=k.cx*W,cy=k.cy*H;
+    var top=a[0]==='t',left=a[1]==='l';
+    var vy=Math.min(H,900)/2;
+    var P0=[left?-60:W+60, top?cy-vy*.85:cy+vy*.85];
+    var dir=left?1:-1;
+    var C1=[P0[0]+dir*(Math.abs(cx-P0[0]))*.35, P0[1]+(top?1:-1)*vy*.05*k.bend];
+    var C2=[cx-dir*Math.abs(cx-P0[0])*.38, cy+(top?-1:1)*vy*.32];
+    var amber=top, col=amber?AM:CY;
+    var g=x.createLinearGradient(P0[0],P0[1],cx,cy);
+    g.addColorStop(0,'rgba('+col+',0)');g.addColorStop(.55,'rgba('+col+',.55)');g.addColorStop(1,'rgba('+(amber?'255,245,217':'227,252,255')+',.95)');
+    var N=9,S=44;
+    for(var s=0;s<N;s++){
+      var u=s/(N-1)*2-1, ph=o.seed+s*.7, sp=.5+.5*Math.sin(s*1.9);
+      x.beginPath();
+      for(var i=0;i<=S;i++){
+        var q=i/S,m=1-q;
+        var bx=m*m*m*P0[0]+3*m*m*q*C1[0]+3*m*q*q*C2[0]+q*q*q*cx;
+        var by=m*m*m*P0[1]+3*m*m*q*C1[1]+3*m*q*q*C2[1]+q*q*q*cy;
+        var dx=3*m*m*(C1[0]-P0[0])+6*m*q*(C2[0]-C1[0])+3*q*q*(cx-C2[0]);
+        var dy=3*m*m*(C1[1]-P0[1])+6*m*q*(C2[1]-C1[1])+3*q*q*(cy-C2[1]);
+        var L=Math.hypot(dx,dy)||1,nx=-dy/L,ny=dx/L;
+        var wave=Math.sin(q*7+t*.7+ph)*.35+Math.sin(q*3.2-t*.45+ph*1.3)*.65;
+        var off=(u*vy*.34+wave*vy*.1*(1+Math.abs(u)))*Math.pow(m,1.35);
+        var px=bx+nx*off,py=by+ny*off;
+        i?x.lineTo(px,py):x.moveTo(px,py);
+      }
+      x.strokeStyle=g;x.lineWidth=.7+sp*1.0;x.globalAlpha=.22+.3*sp;x.stroke();
+    }
+    // soft body
+    x.globalAlpha=.035;x.lineWidth=40;x.beginPath();x.moveTo(P0[0],P0[1]);x.bezierCurveTo(C1[0],C1[1],C2[0],C2[1],cx,cy);x.strokeStyle=g;x.stroke();
+    x.globalAlpha=.07;x.lineWidth=10;x.stroke();
+    // travelling sparks
+    for(var j=0;j<4;j++){
+      var q2=((t*.09+j/4+(top?0:.37))%1),m2=1-q2;
+      var sx=m2*m2*m2*P0[0]+3*m2*m2*q2*C1[0]+3*m2*q2*q2*C2[0]+q2*q2*q2*cx;
+      var sy=m2*m2*m2*P0[1]+3*m2*m2*q2*C1[1]+3*m2*q2*q2*C2[1]+q2*q2*q2*cy;
+      x.globalAlpha=Math.min(1,q2*1.6)*.95;x.fillStyle='rgb('+(amber?'255,236,190':'210,250,255')+')';
+      x.beginPath();x.arc(sx,sy,1.1+q2*1.6,0,6.283);x.fill();
+    }
+  }
+  function draw(o,t){
+    var x=o.x,W=o.W,H=o.H;x.clearRect(0,0,W,H);x.globalCompositeOperation='lighter';
+    o.k.arms.forEach(function(a){arm(o,a,t)});
+    var cx=o.k.cx*W,cy=o.k.cy*H,p=1+.08*Math.sin(t*1.6);
+    var g=x.createRadialGradient(cx,cy,0,cx,cy,110*p);
+    g.addColorStop(0,'rgba(255,253,245,1)');g.addColorStop(.25,'rgba(217,251,255,.55)');g.addColorStop(1,'rgba(143,234,255,0)');
+    x.globalAlpha=1;x.fillStyle=g;x.beginPath();x.arc(cx,cy,110*p,0,6.283);x.fill();
+    x.fillStyle='#fffdf6';x.beginPath();x.arc(cx,cy,3.2,0,6.283);x.fill();
+    // dust
+    for(var d=0;d<12;d++){
+      var fx=(Math.sin(d*12.9+o.seed)*.5+.5)*W,fy=((Math.cos(d*7.7+o.seed)*.5+.5)*H+Math.sin(t*.2+d)*14);
+      x.globalAlpha=.25+.45*(Math.sin(t*1.2+d*2.1)*.5+.5);x.fillStyle='#ecfdff';x.fillRect(fx,fy,1.4,1.4);
+    }
+    x.globalAlpha=1;x.globalCompositeOperation='source-over';
+  }
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){list.forEach(function(o){if(o.sec===e.target)o.vis=e.isIntersecting})})},{rootMargin:'200px'});
+  list.forEach(function(o){size(o);io.observe(o.sec);draw(o,0)});
+  addEventListener('resize',function(){list.forEach(function(o){size(o);draw(o,0)})});
+  if(reduce)return;
+  var t0=performance.now();
+  var last=0;(function loop(n){if(n-last<32||document.hidden){requestAnimationFrame(loop);return}last=n;var t=(n-t0)/1000;list.forEach(function(o){if(o.vis)draw(o,t)});requestAnimationFrame(loop)})(t0);
+})();
+
+/* ---- router, charts, reveals ---- */
+(function(){
+  var views=['home','services','results'];
+  function route(){
+    var h=location.hash,v='home';
+    if(h==='#/services')v='services';else if(h==='#/results')v='results';else if(h==='#/plans')v='plans';
+    document.querySelectorAll('.view').forEach(function(e){e.classList.toggle('on',e.id==='v-'+v)});
+    document.body.classList.toggle('sub',v!=='home');
+    document.querySelectorAll('[data-r]').forEach(function(a){a.classList.toggle('act',a.getAttribute('data-r')===v&&v!=='home')});
+    var tgt=null;
+    if(v==='home'&&h.length>1&&h.indexOf('#/')!==0){try{tgt=document.querySelector(h)}catch(e){}}
+    window.scrollTo(0,0);
+    dispatchEvent(new Event('resize'));
+    setTimeout(function(){ if(tgt)tgt.scrollIntoView(); scan(); },60);
+  }
+  addEventListener('hashchange',route);
+  // segmented bars
+  function build(el,vals,rows,ch,cyan){
+    el.style.setProperty('--ch',ch+'px');if(cyan)el.classList.add('cy');
+    vals.forEach(function(v,i){
+      var col=document.createElement('div');col.className='col';
+      for(var r=0;r<rows;r++){var c=document.createElement('div');c.className='cell'+(r<v?' lit':'')+(r===v-1?' hi':'');c.style.setProperty('--d',(i*.07+r*.03)+'s');col.appendChild(c)}
+      el.appendChild(col);
+    });
+  }
+  document.querySelectorAll('[data-seg]').forEach(function(el){build(el,el.getAttribute('data-seg').split(',').map(Number),+el.getAttribute('data-rows'),+el.getAttribute('data-ch'),el.hasAttribute('data-cy'))});
+  var big=document.getElementById('bigseg');
+  if(big){var d=[5,7,6,9,8,11,10,13,12,15,14,17,13,16,18,15,19,17,20,22,18,21,23,20,24,22,25,27,24,26,28,30,27,29,31,33,30,34,32,36];
+    // 40 columns, rows 24, each value scaled to 0..24
+    build(big,d.map(function(x){return Math.round(x*24/36)}),24,7,false);}
+  // counters
+  function count(el){
+    var to=+el.getAttribute('data-count'),t0=performance.now(),dur=1600;
+    function f(n){var p=Math.min(1,(n-t0)/dur),e=1-Math.pow(1-p,3);el.textContent=Math.round(to*e).toLocaleString('en-IN');if(p<1)requestAnimationFrame(f)}
+    requestAnimationFrame(f);
+  }
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(!e.isIntersecting)return;var el=e.target;io.unobserve(el);
+    el.classList.add('on');
+    if(el.hasAttribute('data-count'))count(el);
+    el.querySelectorAll&&el.querySelectorAll('[data-count]').forEach(function(c){if(!c.__c){c.__c=1;count(c)}});
+    el.querySelectorAll&&el.querySelectorAll('.seg,.donut,.line,.pb').forEach(function(x){x.classList.add('on')});
+  })},{threshold:.2});
+  function scan(){document.querySelectorAll('.reveal,.seg,.donut,.line,.pb,[data-count]').forEach(function(e){if(!e.__o){e.__o=1;io.observe(e)}})}
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches){document.querySelectorAll('.seg,.donut,.line,.pb,.reveal').forEach(function(e){e.classList.add('on')});document.querySelectorAll('[data-count]').forEach(function(e){e.textContent=(+e.getAttribute('data-count')).toLocaleString('en-IN')})}
+  route();
+})();
+</script>
