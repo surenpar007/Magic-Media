@@ -485,7 +485,33 @@ body .cta h2{color:#1A1233}
 @media (max-width:1000px){.hero-copy .button,.hero .button,.nav-shell .brand,.brand{min-height:44px}.hero ~ * .tag a{min-height:44px}.hero-nav a,.cap a,.caps a{display:inline-flex;align-items:center;min-height:44px}}
 .legal-links{display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:center;margin-top:10px}.legal-links a{color:inherit;opacity:.75;text-decoration:underline;text-underline-offset:3px;padding:6px 0}.legal-links a:hover{opacity:1}
 .mailnote{display:block;margin-top:14px;font-size:.92rem;opacity:.85}.mailnote b{font-weight:500;user-select:all}
-@media (max-width:1000px){.service-row a{min-height:44px}}</style>
+@media (max-width:1000px){.service-row a{min-height:44px}}#globe{opacity:0;transition:opacity 1.2s ease}#globe.rdy{opacity:1}.fxc{opacity:0;transition:opacity .9s ease}.fxc.rdy{opacity:1}
+.signal-field{will-change:opacity;contain:strict}
+.sec,.pgsec{content-visibility:auto;contain-intrinsic-size:auto 760px}
+.field-glow,.orb{filter:none}
+@media (max-width:1000px){.field-grain{display:none}.orb{display:none}}
+@media (prefers-reduced-motion:reduce){#globe,.fxc{transition:none}}
+
+.nm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.nm .card{display:flex;flex-direction:column;gap:12px;padding:34px 32px}
+.nm .big{font-size:clamp(2.4rem,6vw,4.4rem);line-height:1;font-weight:500;letter-spacing:-.04em;margin:0;color:var(--amber)}
+.nm .def{font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;opacity:.7;margin:0}
+.nm p{margin:0;line-height:1.7}
+.abt{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:40px 64px;align-items:start}
+.abt .prose p{margin:0 0 18px;line-height:1.8;max-width:60ch}
+.abt .prose p:last-child{margin:0}
+.tl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;border-left:1px solid var(--line)}
+.tl li{position:relative;padding:0 0 28px 28px}
+.tl li:last-child{padding-bottom:0}
+.tl li::before{content:"";position:absolute;left:-5px;top:7px;width:9px;height:9px;border-radius:50%;background:var(--amber)}
+.tl h3{margin:0 0 4px;font-size:1.15rem;font-weight:500}
+.tl p{margin:0;line-height:1.7;opacity:.85}
+.tl .when{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:4px}
+.note2{font-size:.84rem;opacity:.7;margin:22px 0 0}
+.why3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.why3 .card{padding:28px}.why3 h3{margin:0 0 8px;font-size:1.15rem;font-weight:500}.why3 p{margin:0;line-height:1.7;opacity:.85}
+@media (max-width:900px){.nm,.abt,.why3{grid-template-columns:1fr}}
+</style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebSite", "@id": "https://magicmedias.in/#site", "url": "https://magicmedias.in/", "name": "Magic Media", "inLanguage": "en-IN"}, {"@type": "ItemList", "name": "Magic Media services", "itemListElement": [{"@type": "ListItem", "position": 1, "item": {"@type": "Service", "name": "Meta Ads (Facebook & Instagram)", "provider": {"@type": "ProfessionalService", "name": "Magic Media"}, "areaServed": "Chennai", "description": "Campaigns aimed at people near you, built to send enquiries straight to WhatsApp."}}, {"@type": "ListItem", "position": 2, "item": {"@type": "Service", "name": "Google Ads", "provider": {"@type": "ProfessionalService", "name": "Magic Media"}, "areaServed": "Chennai", "description": "Appear when someone searches for what you sell, with calls and map visits you can count."}}, {"@type": "ListItem", "position": 3, "item": {"@type": "Service", "name": "Reels and video", "provider": {"@type": "ProfessionalService", "name": "Magic Media"}, "areaServed": "Chennai", "description": "Short, carefully cut videos with captions and sound that people watch to the end."}}, {"@type": "ListItem", "position": 4, "item": {"@type": "Service", "name": "Website design", "provider": {"@type": "ProfessionalService", "name": "Magic Media"}, "areaServed": "Chennai", "description": "Fast, mobile-first sites with your services, your location and a direct WhatsApp button."}}, {"@type": "ListItem", "position": 5, "item": {"@type": "Service", "name": "WhatsApp automation", "provider": {"@type": "ProfessionalService", "name": "Magic Media"}, "areaServed": "Chennai", "description": "Instant replies, with every new contact saved to a Google Sheet so no enquiry goes cold."}}, {"@type": "ListItem", "position": 6, "item": {"@type": "Service", "name": "Lead generation", "provider": {"@type": "ProfessionalService", "name": "Magic Media"}, "areaServed": "Chennai", "description": "Ads, landing pages and follow-ups that bring you contact details, not just likes."}}]}]}</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="alternate" hreflang="en-in" href="https://magicmedias.in/">
@@ -563,6 +589,7 @@ body .cta h2{color:#1A1233}
           <a href="#/services" data-r="services">Services</a>
           <a href="#/plans" data-r="plans">Plans</a>
           <a href="#/results" data-r="results">Results</a>
+          <a href="#/about" data-r="about">About</a>
           <a href="#approach">Approach</a>
           <a href="#contact">Contact</a>
         </nav>
@@ -743,6 +770,53 @@ body .cta h2{color:#1A1233}
 
 <section class="pgsec tight"><div class="wrap"><div class="cta reveal"><h2>Not sure which plan?</h2><p>Tell us what you sell and your monthly budget. We will suggest the right one.</p><a class="btnd" href="https://wa.me/917904526442" target="_blank" rel="noopener">Ask on WhatsApp <span aria-hidden="true">↗</span></a></div></div></section>
 </div>
+<div id="v-about" class="view">
+<section class="pgsec pgh" data-fx="pgA"><canvas class="fxc" aria-hidden="true"></canvas>
+ <div class="wrap"><span class="chip"><i></i>About</span>
+ <h1>Magic is what happens after you reach us.</h1>
+ <p class="lead">Our name is a promise in two words. Message us with the problem. We turn it into a plan, then into customers.</p>
+ <a class="button button--hero" href="https://wa.me/917904526442" target="_blank" rel="noopener">Message us on WhatsApp <span aria-hidden="true">↗</span></a></div></section>
+
+<section class="pgsec tight"><div class="wrap">
+ <div class="shead"><div><span class="kicker">The name</span><h2 class="h2">Two words, two promises.</h2></div><p class="sub2">Each half of the name says something we hold ourselves to.</p></div>
+ <div class="nm">
+  <article class="card reveal"><p class="def">Magic</p><h3 class="big">Magic</h3><p>Magic is the moment a problem you have carried for months gets solved after one message to us. It is not a trick. It is a clear plan, someone who owns it, and steady follow-through, so what felt stuck starts to move. To you it looks like magic. To us it is the work.</p></article>
+  <article class="card reveal"><p class="def">Media</p><h3 class="big">Media</h3><p>Media means social media. It is where your customers already spend their evenings: Instagram, Facebook, YouTube and WhatsApp. We meet them there with ads, reels, posts and replies, so a person scrolling past becomes a person messaging you.</p></article>
+ </div>
+</div></section>
+
+<section class="pgsec"><div class="wrap">
+ <div class="shead"><div><span class="kicker">The story</span><h2 class="h2">Why we built it this way.</h2></div></div>
+ <div class="abt">
+  <div class="prose reveal">
+   <p>Walk through almost any market in Chennai and you will find shops with good products, loyal customers and a phone that rarely rings from anyone new. The owners are not short of effort. They have boosted a few posts, paid for a package, and received a report full of likes.</p>
+   <p>What they wanted was simpler: more people asking, “Is this available?” So we built Magic Media around that one moment. Every ad, reel and page points to the same place, your WhatsApp, because that is where a Chennai customer actually asks, haggles and buys.</p>
+   <p>The “Magic” part is how little the owner has to carry. You send one message. We reply with a plan and a daily ad budget that fits. You get fewer decisions and more enquiries, and each enquiry is counted, so you always know what worked.</p>
+   <p>The “Media” part is why we begin on social platforms. That is where attention already is. Our job is to give it a reason to stop at your shop.</p>
+  </div>
+  <div class="reveal">
+   <ol class="tl">
+    <li><span class="when">The problem</span><h3>Good shop, quiet phone</h3><p>Customers walk in, but few new people find the business online. Money has gone into posts that earned likes and no calls.</p></li>
+    <li><span class="when">The message</span><h3>One WhatsApp</h3><p>The owner sends the business name and what they want to grow. No forms, no meetings to book first.</p></li>
+    <li><span class="when">The work</span><h3>A plan, then launch</h3><p>We reply with a plan and a daily budget. Ads, reels, a simple site and WhatsApp replies go live, and every new contact is saved to a sheet.</p></li>
+    <li><span class="when">The change</span><h3>Enquiries you can count</h3><p>The owner sees how many people asked, what each enquiry cost and which ad brought them. Then we adjust.</p></li>
+   </ol>
+   <p class="note2">A typical journey, written to show how we work. It is not the story of one named client.</p>
+  </div>
+ </div>
+</div></section>
+
+<section class="pgsec tight"><div class="wrap">
+ <div class="shead"><div><span class="kicker">What “magic” means here</span><h2 class="h2">No tricks. Three habits.</h2></div><p class="sub2">The same three rules shape every plan we sell.</p></div>
+ <div class="why3">
+  <article class="card reveal"><h3>WhatsApp first</h3><p>Customers already message businesses there. We send ads and video straight to it.</p></article>
+  <article class="card reveal"><h3>Every enquiry counted</h3><p>New contacts are saved to a sheet, so you can see what each ad brought in.</p></article>
+  <article class="card reveal"><h3>Built for small budgets</h3><p>We start with a daily ad budget that fits, then adjust as the results come.</p></article>
+ </div>
+</div></section>
+
+<section class="pgsec tight" data-fx="pgC"><canvas class="fxc" aria-hidden="true"></canvas><div class="wrap"><div class="cta reveal"><h2>Tell us the problem.</h2><p>Send your business name and what you want to grow. We reply with a plan.</p><a class="btnd" href="https://wa.me/917904526442" target="_blank" rel="noopener">Open WhatsApp <span aria-hidden="true">↗</span></a></div></div></section>
+</div>
 <div id="v-results" class="view">
 <section class="pgsec pgh" data-fx="pgD"><canvas class="fxc" aria-hidden="true"></canvas>
  <div class="wrap"><span class="chip"><i></i>Results</span>
@@ -789,7 +863,7 @@ body .cta h2{color:#1A1233}
 <footer class="site-footer">
       <p>Built for brands ready to move with intention.</p>
       <p>© 2026 Magic Media <span>·</span> Digital marketing, made magnetic.</p>
-      <nav class="legal-links" aria-label="Legal"><a href="privacy.html">Privacy policy</a><a href="terms.html">Terms</a></nav>
+      <nav class="legal-links" aria-label="Legal"><a href="#/about">About</a><a href="privacy.html">Privacy policy</a><a href="terms.html">Terms</a></nav>
     </footer>
 <script>
 (function(){
@@ -816,13 +890,13 @@ body .cta h2{color:#1A1233}
   });
   var stepP=0;
   function sm(x){x=Math.max(0,Math.min(1,x));return x*x*(3-2*x)}
-  function onScroll(){
-    var h=innerHeight;
-    field.style.opacity=String(1-.72*sm(scrollY/(h*.8)));
-    var r=stepsEl.getBoundingClientRect();
+  var tick=0;
+  function onScroll(){if(tick)return;tick=1;requestAnimationFrame(function(){tick=0;
+    var h=innerHeight,sy=scrollY,r=stepsEl.getBoundingClientRect();
     stepP=Math.max(0,Math.min(1,(h*.72-r.top)/(r.height+h*.1)));
-    stepEls.forEach(function(s,i){s.classList.toggle('on',stepP>i*.22+.02||reduce)});
-  }
+    field.style.opacity=String(1-.72*sm(sy/(h*.8)));
+    stepEls.forEach(function(s,i){var on=stepP>i*.22+.02||reduce;if(s.classList.contains('on')!==on)s.classList.toggle('on',on)});
+  })}
   addEventListener('scroll',onScroll,{passive:true}); addEventListener('resize',onScroll); onScroll();
 
 })();
@@ -838,9 +912,13 @@ body .cta h2{color:#1A1233}
     var o={sec:sec,c:c,x:c.getContext('2d'),k:k,vis:false,W:0,H:0,seed:Math.random()*10};
     list.push(o);
   });
-  function size(o){
-    var r=o.sec.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,1.5);
-    o.W=r.width;o.H=r.height;o.c.width=Math.round(o.W*d);o.c.height=Math.round(o.H*d);o.x.setTransform(d,0,0,d,0,0);
+  /* PERF2 */
+  var LOW=innerWidth<760||(navigator.hardwareConcurrency||8)<=4;
+  var DPR=LOW?1:Math.min(devicePixelRatio||1,1.5);
+  function size(o,w,h){
+    if(!w||!h||(Math.abs(w-o.W)<1&&Math.abs(h-o.H)<1))return false;
+    var d=DPR,cap=LOW?800000:2200000;if(w*h*d*d>cap)d=Math.sqrt(cap/(w*h));
+    o.W=w;o.H=h;o.c.width=Math.round(w*d);o.c.height=Math.round(h*d);o.x.setTransform(d,0,0,d,0,0);return true;
   }
   function arm(o,a,t){
     var W=o.W,H=o.H,x=o.x,k=o.k,cx=k.cx*W,cy=k.cy*H;
@@ -853,7 +931,7 @@ body .cta h2{color:#1A1233}
     var amber=top, col=amber?AM:CY;
     var g=x.createLinearGradient(P0[0],P0[1],cx,cy);
     g.addColorStop(0,'rgba('+col+',0)');g.addColorStop(.55,'rgba('+col+',.55)');g.addColorStop(1,'rgba('+(amber?'255,96,0':'10,100,230')+',.95)');
-    var N=9,S=44;
+    var N=LOW?5:9,S=LOW?28:44;
     for(var s=0;s<N;s++){
       var u=s/(N-1)*2-1, ph=o.seed+s*.7, sp=.5+.5*Math.sin(s*1.9);
       x.beginPath();
@@ -898,30 +976,38 @@ body .cta h2{color:#1A1233}
     }
     x.globalAlpha=1;x.globalCompositeOperation='source-over';
   }
-  var io=new IntersectionObserver(function(es){es.forEach(function(e){list.forEach(function(o){if(o.sec===e.target)o.vis=e.isIntersecting})})},{rootMargin:'200px'});
-  list.forEach(function(o){size(o);io.observe(o.sec);draw(o,0)});
-  addEventListener('resize',function(){list.forEach(function(o){size(o);draw(o,0)})});
-  if(reduce)return;
-  var t0=performance.now();
-  var last=0;(function loop(n){if(n-last<32||document.hidden){requestAnimationFrame(loop);return}last=n;var t=(n-t0)/1000;list.forEach(function(o){if(o.vis)draw(o,t)});requestAnimationFrame(loop)})(t0);
+  var FI=LOW?50:34,thr=LOW?9:14;
+  function paint(o,t){
+    if(!o.W)return;var a=performance.now();draw(o,t);var dt=performance.now()-a;
+    o.ema=o.ema?o.ema*.85+dt*.15:dt;o.n=(o.n||0)+1;
+    if(o.n>24&&o.ema>thr)o.still=true;        /* too slow here: keep the last frame, stop animating */
+    if(!o.shown){o.shown=1;o.c.classList.add('rdy')}
+  }
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){var o=e.target.__o;if(!o)return;o.vis=e.isIntersecting;if(o.vis&&!o.drawn&&o.W){o.drawn=1;paint(o,0)}})},{rootMargin:'120px'});
+  var ro=new ResizeObserver(function(es){es.forEach(function(e){var o=e.target.__o;if(!o)return;var r=e.contentRect;if(size(o,r.width,r.height)&&o.vis){o.drawn=1;paint(o,0)}})});
+  function start(){list.forEach(function(o){o.sec.__o=o;ro.observe(o.sec);io.observe(o.sec)});
+    if(reduce)return;
+    var t0=performance.now(),last=0;
+    (function loop(n){if(n-last>=FI&&!document.hidden){last=n;var t=(n-t0)/1000;for(var k=0;k<list.length;k++){var o=list[k];if(o.vis&&!o.still)paint(o,t)}}requestAnimationFrame(loop)})(t0);}
+  var idle=window.requestIdleCallback||function(f){setTimeout(f,150)};
+  if(document.readyState==='complete')idle(start);else addEventListener('load',function(){idle(start)});
 })();
 
 /* ---- router, charts, reveals ---- */
 (function(){
   var views=['home','services','results'];
-  var PAGEMETA={home:["Magic Media | Digital Marketing Agency in Chennai","Chennai digital marketing studio: Meta & Google ads, AI reels, social posts, websites and WhatsApp automation. Plans from ₹29,999/month."],services:["Digital Marketing Services in Chennai – Magic Media","Meta & Google ads, AI reels, social media posts, business websites, WhatsApp automation and lead generation for Chennai businesses."],plans:["Marketing Plans & Pricing from ₹29,999 – Magic Media","Foundation ₹29,999, Accelerator ₹59,999 and Growth Engine ₹99,999 per month. Meta ads, reels, posts, website and Google My Business."],results:["Marketing Results & Reporting – Magic Media","See how Magic Media tracks enquiries, leads and ad performance for small and growing businesses in Chennai."]};
+  var PAGEMETA={home:["Magic Media | Digital Marketing Agency in Chennai","Chennai digital marketing studio: Meta & Google ads, AI reels, social posts, websites and WhatsApp automation. Plans from ₹29,999/month."],services:["Digital Marketing Services in Chennai – Magic Media","Meta & Google ads, AI reels, social media posts, business websites, WhatsApp automation and lead generation for Chennai businesses."],plans:["Marketing Plans & Pricing from ₹29,999 – Magic Media","Foundation ₹29,999, Accelerator ₹59,999 and Growth Engine ₹99,999 per month. Meta ads, reels, posts, website and Google My Business."],about:["About Magic Media | Why We Are Called Magic Media","The story behind the name: Magic is how we solve your problem after you reach us, Media is the social platforms where your customers already are."],results:["Marketing Results & Reporting – Magic Media","See how Magic Media tracks enquiries, leads and ad performance for small and growing businesses in Chennai."]};
   var CANON="https://magicmedias.in/";
   function seo(v){var m=PAGEMETA[v]||PAGEMETA.home;document.title=m[0];var d=document.querySelector('meta[name=description]');if(d)d.setAttribute('content',m[1]);var c=document.querySelector('link[rel=canonical]');if(c)c.setAttribute('href',CANON);}
   function route(){
     var h=location.hash,v='home';
-    if(h==='#/services')v='services';else if(h==='#/results')v='results';else if(h==='#/plans')v='plans';
+    if(h==='#/services')v='services';else if(h==='#/results')v='results';else if(h==='#/plans')v='plans';else if(h==='#/about')v='about';
     document.querySelectorAll('.view').forEach(function(e){e.classList.toggle('on',e.id==='v-'+v)});
     document.body.classList.toggle('sub',v!=='home');seo(v);
     document.querySelectorAll('[data-r]').forEach(function(a){a.classList.toggle('act',a.getAttribute('data-r')===v&&v!=='home')});
     var tgt=null;
     if(v==='home'&&h.length>1&&h.indexOf('#/')!==0){try{tgt=document.querySelector(h)}catch(e){}}
     window.scrollTo(0,0);
-    dispatchEvent(new Event('resize'));
     setTimeout(function(){ if(tgt)tgt.scrollIntoView(); scan(); },60);
   }
   addEventListener('hashchange',route);
